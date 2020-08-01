@@ -1126,6 +1126,7 @@ $size-header-pad: 4em;
 
 			a {
 				color: _palette(accent2, fg-light);
+				text-decoration: none;
 			}
 		}
 
@@ -1399,6 +1400,9 @@ $size-header-pad: 4em;
 						line-height: 2.25em;
 						margin-left: 0;
 						padding-left: 0;
+						a {
+							text-decoration: none;
+						}
 					}
 				}
 			}
@@ -1492,6 +1496,9 @@ $size-header-pad: 4em;
 						line-height: 1em;
 						margin-left: 0.75em;
 						padding-left: 0.75em;
+						a {
+							text-decoration: none;
+						}
 					}
 				}
 			}
@@ -1626,6 +1633,10 @@ $size-header-pad: 4em;
 						line-height: 2.25em;
 						margin-left: 0;
 						padding-left: 0;
+						text-decoration: none;
+						a {
+							text-decoration: none;
+						}
 					}
 				}
 			}

@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<!--
+	Strata by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Go install</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="../assets/css/main.css"/>
+</head>
+<body class="is-preload">
+
+<!-- Header -->
+<header id="header">
+    <div class="inner">
+        <a href="#" class="image avatar"><img src="../images/avatar.jpg" alt=""/></a>
+        <div><h1><strong>Wu Kuan-Che</strong><br/></h1></div>
+        <div>
+            Golang / Java Backend Engineer<br/>
+            Android Developer
+        </div>
+        </h1>
+    </div>
+</header>
+
+<!-- Main -->
+<div id="main">
+
+    <h1>Go install</h1>
+    <h3>
+        Golang Layout
+    </h3>
+    <div>
+        GOPATH為工作環境資料夾，所以以此資料夾下的src為主資料夾新增project，通常資料夾結構如以下
+    </div>
+    <div>
+        <img src="../images/go_layout.png" width="30%" height="30%">
+    </div>
+    <div>
+        <br>
+        <h3>Mac</h3>
+        <div>
+            <ul style="list-style-type: decimal; list-style-position: outside">
+                <li>直接下載pkg一鍵到底裝一裝</li>
+                <li>開啟terminal: go env 確認是否安裝成功</li>
+                <li>看GOPATH位置是否確實有該資料夾 如無則新增</li>
+                <li>GOPATH通常會是在~/go (但可修改)</li>
+                <li>HOME資料夾下的 .bash_profile修改</li>
+                <li>
+                    <div>
+                        export GOPATH=~/go <br>
+                        PATH=$PATH:$GOPATH/bin <br>
+                        export GO111MODULE="on" (option) <br>
+                    </div>
+                </li>
+                <li>最後記得開啟終端機吃到最新設定：source ~/.bash_profile</li>
+
+            </ul>
+        </div>
+        <br>
+        <h3>Linux</h3>
+        <div>
+            <ul style="list-style-type: decimal; list-style-position: outside">
+                <li>打開終端機下指令 tar -C /usr/local -xzf go1.14.2.linux-amd64.tar.gz</li>
+                <li>修改$HOME/.profile</li>
+                <li>新增export PATH=$PATH:/usr/local/go/bin <br>
+                    export GO111MODULE="on" (option) <br>
+                    最後一樣source 修改檔案更新設定
+                </li>
+                <li>
+                    Goland<br>
+                    Go Module功能可在Setting設定 Runtime參數則要另外在Edit Configuration >> Environment新增
+                </li>
+                <li>
+                    Visual Studio<br>
+                    搜尋Go並安裝 開啟Comand Palette 輸入 Go: Install/Update tools 全選執行 <br>
+                    Setting json檔可新增其他功能 <br>
+                    ex:存檔時排版<br>
+                    Launch json可設定環境變數 "configurations": [ { "env": { "REDIS_HOST": "127.0.0.1:6379" }, } ]
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer id="footer">
+    <div class="inner">
+        <ul class="icons">
+            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="https://github.com/carrey1994" class="icon brands fa-github"><span class="label">Github</span></a>
+            </li>
+            <li><a href="../index.html" class="icon solid fa-home"><span class="label">Home</span></a></li>
+            <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
+        </ul>
+        <ul class="copyright">
+            <li>&copy; James</li>
+            <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+        </ul>
+    </div>
+</footer>
+
+<!-- Scripts -->
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/jquery.poptrox.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+
+</body>
+</html>
