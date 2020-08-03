@@ -16,7 +16,7 @@
 <!-- Header -->
 <header id="header">
     <div class="inner">
-        <a href="#" class="image avatar"><img src="../images/avatar.jpg" alt=""/></a>
+        <a href="#" class="image avatar"><img src="../images/img_photo.jpeg" alt=""/></a>
         <div><h1><strong>Wu Kuan-Che</strong><br/></h1></div>
         <div>
             Golang / Java Backend Engineer<br/>
@@ -29,7 +29,7 @@
 <!-- Main -->
 <div id="main">
 
-    <h1>Go Override應用</h1>
+    <i><h1>Go override</h1></i>
     <div class="auto-br">
             package main
 
@@ -59,7 +59,8 @@
             }
 
             func (g *PCGame) Cost() {
-                //若無override則依原先Game一般Money-100
+                //若打開註解則Money-200
+                //可做額外扣除計算等等override
                 g.Money -= 200
             }
 
