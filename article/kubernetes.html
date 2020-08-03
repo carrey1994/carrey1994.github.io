@@ -6,7 +6,7 @@
 -->
 <html>
 <head>
-    <title>Strata by HTML5 UP</title>
+    <title>Kubernetes 筆記</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <link rel="stylesheet" href="../assets/css/main.css"/>
@@ -28,19 +28,122 @@
 
 <!-- Main -->
 <div id="main">
+    <i><h1>Kubernetes 筆記</h1></i>
+    <i>Kind Cluster安裝</i>
+    <div>
+    https://kind.sigs.k8s.io/docs/user/quick-start/
+    </div>
+    </br>
+    <i>config.yaml</i><br>
+    kind create cluster --config config.yaml --name demo-cluster
+    <pre>
+        <code>
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+    nodes:
+  - role: control-plane
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      - containerPort: 30000
+        hostPort: 8099
+        protocol: TCP
+      # optional: set the bind address on the host
+      # 0.0.0.0 is the current default
+        listenAddress: "127.0.0.1"
+      - containerPort: 443
+        hostPort: 443
+        protocol: TCP
 
-    <h1>K8s note ....</h1>
+        </code>
+    </pre>
+    <i>deployment.yaml</i><br>
+    kubectl apply -f deployment.yaml
+    <pre>
+        <code>
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: project
+  name: my-project
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: project
+  template:
+    metadata:
+      labels:
+        app: project
+    spec:
+      containers:
+        - image: carrey1994/websocket
+          name: my-project
+          env:
+            # Define the environment variable
+            - name: KEY_LOG_ADDR
+              valueFrom:
+                configMapKeyRef:
+                  name: special-config
+                  key: log.addr
+          ports:
+            - containerPort: 30000
+        </code>
+    </pre>
+    <i>ingress.yaml</i><br>
+    kubectl apply -f ingress.yaml
+    <pre>
+        <code>
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: web
+spec:
+  rules:
+    - host: kind.cluster.demo.com
+      http:
+        paths:
+          - backend:
+              serviceName: my-service
+              servicePort: 8099
+        </code>
+    </pre>
+    <i>service.yaml</i><br>
+    kubectl apply -f ingress.yaml
+    <pre>
+        <code>
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: project
+  type: NodePort
+  ports:
+    - protocol: TCP
+      nodePort: 30000
+      port: 8099
+      targetPort: 8080
+        # port for service  連進kind control panel後可以對其curl 〈service-cluster-ip〉:〈port〉
+        # nodePort for node 連進kind control panel後可以對其curl 〈127.0.0.1〉:〈nodePort〉
+        # targetPort for program of server port
+        </code>
+    </pre>
 </div>
 
 <!-- Footer -->
 <footer id="footer">
     <div class="inner">
         <ul class="icons">
-            <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
             <li><a href="https://github.com/carrey1994" class="icon brands fa-github"><span class="label">Github</span></a>
             </li>
             <li><a href="../index.html" class="icon solid fa-home"><span class="label">Home</span></a></li>
-            <li><a href="#" class="icon solid fa-envelope"><span class="label">Email</span></a></li>
         </ul>
         <ul class="copyright">
             <li>&copy; James</li>
