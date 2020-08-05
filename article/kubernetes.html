@@ -17,7 +17,7 @@
 <header id="header">
     <div class="inner">
         <a href="#" class="image avatar"><img src="../images/img_photo.jpeg" alt=""/></a>
-        <div><h1><strong>Wu Kuan-Che</strong><br/></h1></div>
+        <div><h1><strong>James</strong><br/></h1></div>
         <div>
             Golang / Java Backend Engineer<br/>
             Android Developer
@@ -37,7 +37,6 @@
     <i>config.yaml</i><br>
     kind create cluster --config config.yaml --name demo-cluster
     <pre>
-        <code>
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
     nodes:
@@ -58,13 +57,10 @@ apiVersion: kind.x-k8s.io/v1alpha4
       - containerPort: 443
         hostPort: 443
         protocol: TCP
-
-        </code>
     </pre>
     <i>deployment.yaml</i><br>
     kubectl apply -f deployment.yaml
     <pre>
-        <code>
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -93,12 +89,10 @@ spec:
                   key: log.addr
           ports:
             - containerPort: 30000
-        </code>
     </pre>
     <i>ingress.yaml</i><br>
     kubectl apply -f ingress.yaml
     <pre>
-        <code>
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
@@ -111,12 +105,10 @@ spec:
           - backend:
               serviceName: my-service
               servicePort: 8099
-        </code>
     </pre>
     <i>service.yaml</i><br>
     kubectl apply -f ingress.yaml
     <pre>
-        <code>
 apiVersion: v1
 kind: Service
 metadata:
@@ -130,10 +122,9 @@ spec:
       nodePort: 30000
       port: 8099
       targetPort: 8080
-        # port for service  連進kind control panel後可以對其curl 〈service-cluster-ip〉:〈port〉
-        # nodePort for node 連進kind control panel後可以對其curl 〈127.0.0.1〉:〈nodePort〉
-        # targetPort for program of server port
-        </code>
+# port for service  連進kind control panel後可以對其curl 〈service-cluster-ip〉:〈port〉
+# nodePort for node 連進kind control panel後可以對其curl 〈127.0.0.1〉:〈nodePort〉
+# targetPort for program of server port
     </pre>
 </div>
 

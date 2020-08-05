@@ -64,9 +64,25 @@ div .auto-br {
 	word-wrap: break-word;      /* IE 5.5-7 */
 	white-space: -moz-pre-wrap; /* Firefox 1.0-2.0 */
 	white-space: pre-wrap;      /* current browsers */
+	font-size: large;
 }
+
+div .context {
+	font-size: large;
+}
+
 i {
     color: #3e88b0;
+}
+
+pre code {
+	background: transparent;
+	border: transparent
+}
+
+div pre {
+	font-size: medium;
+	line-height: 30px;
 }
 
 input::-moz-focus-inner {

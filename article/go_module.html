@@ -6,7 +6,7 @@
 -->
 <html>
 <head>
-    <title>Override</title>
+    <title>Go Module</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <link rel="stylesheet" href="../assets/css/main.css"/>
@@ -17,7 +17,7 @@
 <header id="header">
     <div class="inner">
         <a href="#" class="image avatar"><img src="../images/img_photo.jpeg" alt=""/></a>
-        <div><h1><strong>Wu Kuan-Che</strong><br/></h1></div>
+        <div><h1><strong>James</strong><br/></h1></div>
         <div>
             Golang / Java Backend Engineer<br/>
             Android Developer
@@ -29,48 +29,22 @@
 <!-- Main -->
 <div id="main">
 
-    <i><h1>Go override</h1></i>
-    <div class="auto-br">
-            package main
+    <i>Go Module Note</i>
 
-            import "fmt"
-
-            type IGame interface {
-                Clone() IGame
-                Cost()
-                GetAmount() int
-            }
-
-            type Game struct {
-                IGame
-                Money int
-            }
-
-            func (g *Game) GetAmount() int {
-                return g.Money
-            }
-
-            func (g *Game) Cost() {
-                g.Money -= 100
-            }
-
-            type PCGame struct {
-                Game
-            }
-
-            func (g *PCGame) Cost() {
-                //若打開註解則Money-200
-                //可做額外扣除計算等等override
-                g.Money -= 200
-            }
-
-            func main() {
-                var game IGame = &PCGame{Game{Money: 1000}}
-                game.Cost()
-                fmt.Println(game.GetAmount())
-            }
-
-        </p>
+    <div class="context">
+        <ul>
+            <li>Go Module可依commit的hashcode新增套件</li>
+            <li>go get github.com/carrey1994/mypackage@commit_hash_code</li>
+            <li>當package無特定tag</li>
+            <li>通常輸入包版本為v0.0.0</li>
+            <li>當須更新import package檔案時</li>
+            <li>當須更新import package檔案時</li>
+            <li>須先push完輸入包裡要更新的代碼</li>
+            <li>並依其commit完成的hashcode</li>
+            <li>Go Module可依commit的hashcode新增套件</li>
+            <li>並依其commit完成的hashcode對做其go mod的更新</li>
+            <li>go mod edit -require github.company.com/carrey1994/mypackage@commit_hash_code</li>
+        </ul>
     </div>
 
 </div>
@@ -79,8 +53,7 @@
 <footer id="footer">
     <div class="inner">
         <ul class="icons">
-            <li><a href="https://github.com/carrey1994" class="icon brands fa-github"><span class="label">Github</span></a>
-            </li>
+            <li><a href="https://github.com/carrey1994" class="icon brands fa-github"><span class="label">Github</span></a></li>
             <li><a href="../index.html" class="icon solid fa-home"><span class="label">Home</span></a></li>
         </ul>
         <ul class="copyright">
