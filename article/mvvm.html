@@ -6,7 +6,7 @@
 -->
 <html>
 <head>
-    <title>Istio Note</title>
+    <title>Android Live Data</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <link rel="stylesheet" href="../assets/css/main.css"/>
@@ -29,27 +29,45 @@
 <!-- Main -->
 <div id="main">
 
-    <i><h1>Istio Note</h1></i>
-    First, downlaod the Istio from <a href="https://istio.io/latest/docs/setup/getting-started/">here.</a>
+    <h1>LiveData</h1>
     <pre>
-    &emsp;
-istioctl install --set profile=demo
-cd istio-1.5.4/samples/helloworld
-kubectl apply -f helloworld.yaml
-kubectl apply -f helloworld-gateway.yaml
-kubectl edit svc istio-ingressgateway -n istio-system //To get rid of pending status
-kubectl port-forward svc/istio-ingressgateway LOCAL-PORT:80 -n istio-system
-curl localhost:LOCAL-PORT/hello
+class MainActivity : AppCompatActivity() {
+    private val mainViewModel by lazy {
+        ViewModelProviders.of(this).get(MainViewModel::class.java)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        observeData() //Once data receive, message will be showed by toast.
+        callAPI()
+    }
+
+    private fun callAPI(){
+        // receive fake data and send to mutable live data
+        Handler().postDelayed({
+			mainViewModel.videoData.postValue("Hello")
+		},5000)
+    }
+
+}
+
+class MainViewModel : ViewModel() {
+    val data = MutableLiveData&lt;String&gt;()
+}
+
+private fun observeData() = mainViewModel.data.observe(this, Observer {
+    Toast.makeText(this, it, Toast.LENGTH_SHORT)
+})
     </pre>
-    It will show the version1 or version2. //Important
+
 </div>
 
 <!-- Footer -->
 <footer id="footer">
     <div class="inner">
         <ul class="icons">
-            <li><a href="https://github.com/carrey1994" class="icon brands fa-github"><span class="label">Github</span></a>
-            </li>
+            <li><a href="https://github.com/carrey1994" class="icon brands fa-github"><span class="label">Github</span></a></li>
             <li><a href="../index.html" class="icon solid fa-home"><span class="label">Home</span></a></li>
         </ul>
         <ul class="copyright">

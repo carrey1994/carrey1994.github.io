@@ -122,8 +122,10 @@ spec:
       nodePort: 30000
       port: 8099
       targetPort: 8080
-# port for service  連進kind control panel後可以對其curl 〈service-cluster-ip〉:〈port〉
-# nodePort for node 連進kind control panel後可以對其curl 〈127.0.0.1〉:〈nodePort〉
+# port for service
+# docker exec -it kind-cluster bash & curl service-cluster-ip:port
+# nodePort for node
+# docker exec -it kind-cluster bash & curl 127.0.0.1:nodePort
 # targetPort for program of server port
     </pre>
 </div>

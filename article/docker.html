@@ -29,92 +29,89 @@
 <!-- Main -->
 <div id="main">
 
-    <i><h1>Docker 筆記</h1></i>
+    <i><h1>Docker Note</h1></i>
     <i class="title">代碼撰寫</i>
-    <div class="auto-br">
-        func main() {
-            engine := gin.Default()
-            engine.Handle(http.MethodGet, "/", hello)
-            engine.Run(":8080")
-        }
+    <pre>
+func main() {
+    engine := gin.Default()
+    engine.Handle(http.MethodGet, "/", hello)
+    engine.Run(":8080")
+}
 
-        func hello(context *gin.Context) {
-            context.JSON(http.StatusOK, gin.H{
-                "message": "hello",
-            })
-        }
-    </div>
+func hello(context *gin.Context) {
+    context.JSON(http.StatusOK, gin.H{
+        "message": "hello",
+    })
+}
+    </pre>
     <i>Dockerfile撰寫</i>
-    <div>
-        <br/>
-        <ul style="list-style-type: none; font-size: large">
-            <li>FROM centos</li>
-            <li>RUN yum update -y</li>
-            <li>RUN yum install -y gcc</li>
-            <li>RUN yum install -y go</li>
-            <li>WORKDIR /go/src/project</li>
-            <li>ENV GOPATH /go</li>
-            <li>ENV GO111MODULE on</li>
-            <li>ADD main.go .</li>
-            <li>ADD go.mod .</li>
-            <li>RUN go get -d -v ./...</li>
-            <li>RUN go install -v ./...</li>
-            <li>RUN go build -o main ./...</li>
-            <li>RUN touch log</li>
-            <li>CMD ["/bin/bash", "-l", "-c", "./main > log 2>&1"]</li>
-        </ul>
-    </div>
+    <pre>
+FROM centos
+RUN yum update -y
+RUN yum install -y gcc
+RUN yum install -y go
+WORKDIR /go/src/project
+ENV GOPATH /go
+ENV GO111MODULE on
+ADD main.go .
+ADD go.mod .
+RUN go get -d -v ./...
+RUN go install -v ./...
+RUN go build -o main ./...
+RUN touch log
+CMD ["/bin/bash", "-l", "-c", "./main > log 2>&1"]
+    </pre>
     <i>Docker Image製作</i>
     <div class="auto-br">
-        Terminal: docker build -t &lt;REGISTRY/IMAGE-NAME:TAG&gt; .
-        -t 命名Image名稱和添加tag，並可push上的registry
+Terminal: docker build -t &lt;REGISTRY/IMAGE-NAME:TAG&gt; .
+-t 命名Image名稱和添加tag，並可push上的registry
 
-        carrey1994/docker-play:release
-        Dockerhub上的空間
+carrey1994/docker-play:release
+Dockerhub上的空間
 
-        localhost:5000/docker-play:release
-        local registry
+localhost:5000/docker-play:release
+local registry
 
-        111.222.333.444:5000/docker-play:release
-        remote private registry
+111.222.333.444:5000/docker-play:release
+remote private registry
 
-        docker push carrey1994/docker-play:release
-        將docker image 推到carrey1994的registry上
+docker push carrey1994/docker-play:release
+將docker image 推到carrey1994的registry上
     </div>
     <i>Docker Container運行</i>
     <div class="auto-br">
-        Docker run -d -p 8080:8080 --name play docker-play
-        將運行容器於背景並將8080 port forward到本機
+Docker run -d -p 8080:8080 --name play docker-play
+將運行容器於背景並將8080 port forward到本機
 
-        Docker stop &lt;ContainerId or ContainerName&gt;
-        可將運行中的container停止
+Docker stop &lt;ContainerId or ContainerName&gt;
+可將運行中的container停止
 
-        Docker start &lt;ContainerId or ContainerName&gt;
-        可將已停止的container重新運行
+Docker start &lt;ContainerId or ContainerName&gt;
+可將已停止的container重新運行
 
-        Docker exec -it &lt;CONTAINER-ID&gt; bash
-        可進入CONTAINER容器中以bash下達指令
+Docker exec -it &lt;CONTAINER-ID&gt; bash
+可進入CONTAINER容器中以bash下達指令
     </div>
     <i>Docker compose可以一次起多個docker container</i>
     <div class="auto-br">
-        例如可以下載https://github.com/deviantony/docker-elk.git以docker compose來快速運行啟動ELK。
+例如可以下載https://github.com/deviantony/docker-elk.git以docker compose來快速運行啟動ELK。
     </div>
     <i>Docker其他相關</i>
     <div class="auto-br">
-        docker save -o ~/docker-play.tar docker-play 可將Image製成.tar檔
-        docker load -i ~/docker-play.tar 可將.tar檔載進即可看到docker image
-        docker tag docker-play &lt;NEW-IMAGE-NAME&gt;
-        docker volume 此功能可將檔案進行mount
+docker save -o ~/docker-play.tar docker-play 可將Image製成.tar檔
+docker load -i ~/docker-play.tar 可將.tar檔載進即可看到docker image
+docker tag docker-play &lt;NEW-IMAGE-NAME&gt;
+docker volume 此功能可將檔案進行mount
     </div>
     <i>簡單運行redis container在Docker上</i>
     <div class="auto-br">
-        docker run -d -p 6379:6379 --name mredis redis
-        //若docker images無redis則會自動搜尋redis image並將其pull下來。
-        docker exec -it mredis redis-cli
+docker run -d -p 6379:6379 --name mredis redis
+//若docker images無redis則會自動搜尋redis image並將其pull下來。
+docker exec -it mredis redis-cli
 
-        docker stop mredis
+docker stop mredis
 
-        docker start mredis
+docker start mredis
     </div>
 
 </div>

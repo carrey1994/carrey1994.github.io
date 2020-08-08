@@ -6,7 +6,7 @@
 -->
 <html>
 <head>
-    <title>Istio Note</title>
+    <title>Heroku Note</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <link rel="stylesheet" href="../assets/css/main.css"/>
@@ -29,27 +29,60 @@
 <!-- Main -->
 <div id="main">
 
-    <i><h1>Istio Note</h1></i>
-    First, downlaod the Istio from <a href="https://istio.io/latest/docs/setup/getting-started/">here.</a>
+    <h1>Heroku Note</h1>
+    <i>application.properties 配置</i>
     <pre>
-    &emsp;
-istioctl install --set profile=demo
-cd istio-1.5.4/samples/helloworld
-kubectl apply -f helloworld.yaml
-kubectl apply -f helloworld-gateway.yaml
-kubectl edit svc istio-ingressgateway -n istio-system //To get rid of pending status
-kubectl port-forward svc/istio-ingressgateway LOCAL-PORT:80 -n istio-system
-curl localhost:LOCAL-PORT/hello
+server.port=8081
+spring.database.driverClassName=org.postgresql.Driver
+spring.datasource.driverClassName=org.postgresql.Driver
+spring.http.encoding.force=true
+
+#HerokuDB
+#spring.datasource.url=postgres://......
+#spring.datasource.username=......
+#spring.datasource.password=......
+
+#Local DB
+spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+spring.datasource.username=......
+spring.datasource.password=......
     </pre>
-    It will show the version1 or version2. //Important
+    <i>config with heroku</i>
+    <pre>
+@Configuration
+public class DatabaseConfig {
+
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
+
+    @Bean
+    public DataSource dataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl(dbUrl);
+        return new HikariDataSource(config);
+    }
+
+}
+    </pre>
+
+    <i>postgreSQL DB create Server</i><br/>
+    Step1: open pgAdmin > Servers > Create > Server...<br/>
+
+    Step2: Gerneral tab > Name : give it a name your like (ex. Heroku)<br/>
+
+    Step3: Connection tab > fill up the forum by heroku Database Credentials (hint:check saving password is good)<br/>
+
+    Step4(Important): Advanced tab > give DB name to DB restriction<br/>
+
+    P.s. Forgiving this step, the database will result to some problem<br/>
+
 </div>
 
 <!-- Footer -->
 <footer id="footer">
     <div class="inner">
         <ul class="icons">
-            <li><a href="https://github.com/carrey1994" class="icon brands fa-github"><span class="label">Github</span></a>
-            </li>
+            <li><a href="https://github.com/carrey1994" class="icon brands fa-github"><span class="label">Github</span></a></li>
             <li><a href="../index.html" class="icon solid fa-home"><span class="label">Home</span></a></li>
         </ul>
         <ul class="copyright">
