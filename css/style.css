@@ -1,0 +1,13 @@
+body {
+  background-color: #f5f5dc;
+  font-family: "Comic Sans MS", sans-serif;
+}
+hr {
+  background-color: gray;
+  border-style: none;
+  height: 2px;
+}
+
+.intro {
+  font-style: italic;
+}
