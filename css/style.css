@@ -11,3 +11,11 @@ hr {
 .intro {
   font-style: italic;
 }
+
+h2, h4{
+  margin: 0px;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
