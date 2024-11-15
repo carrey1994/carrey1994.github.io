@@ -1,0 +1,21 @@
+body {
+  background-color: #f5f5dc;
+  font-family: "Comic Sans MS", sans-serif;
+}
+hr {
+  background-color: gray;
+  border-style: none;
+  height: 2px;
+}
+
+.intro {
+  font-style: italic;
+}
+
+h2, h4{
+  margin: 0px;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
