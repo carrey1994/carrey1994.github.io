@@ -1,1 +1,0 @@
-self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/n2120008456/Documents/carrey1994.github.io/app/layout":["static/media/a34f9d1faa5f3315-s.p.woff2"]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}';
