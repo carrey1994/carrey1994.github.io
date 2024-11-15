@@ -43,6 +43,12 @@ interface PageProps {
   params: Promise<{ slug: string }>
 }
 
+export async function generateStaticParams() {
+  return MOCK_ARTICLES.map((article) => ({
+    slug: article.slug,
+  }))
+}
+
 export default async function ArticlePage({ params }: PageProps) {
   const { slug } = await params
   const article = MOCK_ARTICLES.find(article => article.slug === slug)
