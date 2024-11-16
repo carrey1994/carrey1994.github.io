@@ -20,6 +20,21 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Deploy to GitHub Pages
+
+1. Build the project:
+```bash
+npm run build
+```
+
+2. Important: Create a `.nojekyll` file in the `out` directory:
+```bash
+touch out/.nojekyll
+```
+This step is crucial as it prevents GitHub Pages from ignoring files that begin with an underscore (_next).
+
+3. Deploy the `out` directory to GitHub Pages.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
