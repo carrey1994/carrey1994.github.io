@@ -6,8 +6,8 @@ export const MOCK_PROFILE: Profile = {
   avatar: "/avatar.jpg",
   socialLinks: {
     github: "https://github.com/carrey1994",
-    twitter: "https://twitter.com/carrey1994",
-    linkedin: "https://linkedin.com/in/carrey1994"
+    twitter: "https://twitter.com",
+    linkedin: "https://linkedin.com"
   }
 }
 
