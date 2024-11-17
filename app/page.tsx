@@ -9,16 +9,21 @@ import Image from 'next/image'
 import MouseFollowGradient from './components/MouseFollowGradient'
 import FadeIn from './components/FadeIn'
 
-const ITEMS_PER_PAGE = 3
+const ITEMS_PER_PAGE = 5 // Set to exactly 5 articles per page
 
 export default function Home() {
   const [currentPage, setCurrentPage] = useState(1)
   const [imageError, setImageError] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   
-  const totalPages = Math.ceil(MOCK_ARTICLES.length / ITEMS_PER_PAGE)
+  // Sort articles by date (most recent first)
+  const sortedArticles = [...MOCK_ARTICLES].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
+  
+  const totalPages = Math.ceil(sortedArticles.length / ITEMS_PER_PAGE) // Should be exactly 10 pages
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-  const paginatedArticles = MOCK_ARTICLES.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+  const paginatedArticles = sortedArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE)
 
   useEffect(() => {
     // Simulate initial loading
@@ -31,6 +36,8 @@ export default function Home() {
   const handlePageChange = (page: number) => {
     setIsLoading(true)
     setCurrentPage(page)
+    // Scroll to top when changing pages
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     // Simulate page loading delay
     setTimeout(() => {
       setIsLoading(false)
@@ -42,21 +49,26 @@ export default function Home() {
       {/* Main Content */}
       <div className="lg:col-span-2 space-y-8">
         <FadeIn>
-          <h1 className="text-4xl font-bold animate-text-gradient">
-            Latest Articles
-          </h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-4xl font-bold animate-text-gradient">
+              Latest Articles
+            </h1>
+            <p className="text-gray-400">
+              {sortedArticles.length} articles
+            </p>
+          </div>
         </FadeIn>
         
         <div className="space-y-8">
           {isLoading ? (
-            // Show skeletons while loading
+            // Show exactly 5 skeletons
             Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
               <FadeIn key={`skeleton-${index}`} delay={index * 100}>
                 <ArticleCardSkeleton />
               </FadeIn>
             ))
           ) : (
-            // Show actual articles
+            // Show exactly 5 articles
             paginatedArticles.map((article, index) => (
               <FadeIn key={article.id} delay={index * 100}>
                 <ArticleCard article={article} />
@@ -66,11 +78,15 @@ export default function Home() {
         </div>
 
         <FadeIn delay={400}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
+          <div className="mt-12">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              itemsPerPage={ITEMS_PER_PAGE}
+              totalItems={sortedArticles.length}
+            />
+          </div>
         </FadeIn>
       </div>
 
