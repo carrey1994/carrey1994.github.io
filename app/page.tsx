@@ -84,9 +84,9 @@ export default function Home() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8">
       {/* Main Content */}
-      <div ref={articlesRef} className="lg:col-span-2 space-y-8">
+      <div ref={articlesRef} className="lg:col-span-2">
         <FadeIn>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mb-3">
             <h1 className={`text-4xl font-bold animate-text-gradient transition-opacity duration-300 ${
               isTitleTransitioning ? 'opacity-0' : 'opacity-100'
             }`}>
@@ -100,29 +100,28 @@ export default function Home() {
           </div>
         </FadeIn>
         
-        <div className="space-y-8">
-          {isLoading ? (
-            // Show exactly 5 skeletons
-            Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
               <FadeIn key={`skeleton-${index}`} delay={index * 100}>
                 <ArticleCardSkeleton />
               </FadeIn>
-            ))
-          ) : (
-            <div className={`transition-all duration-300 ${
-              isFiltering ? 'opacity-50 scale-[0.99]' : 'opacity-100 scale-100'
-            }`}>
-              {paginatedArticles.map((article, index) => (
-                <FadeIn key={article.id} delay={index * 100}>
-                  <ArticleCard article={article} />
-                </FadeIn>
-              ))}
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className={`space-y-3 transition-all duration-300 ${
+            isFiltering ? 'opacity-50 scale-[0.99]' : 'opacity-100 scale-100'
+          }`}>
+            {paginatedArticles.map((article, index) => (
+              <FadeIn key={article.id} delay={index * 100}>
+                <ArticleCard article={article} />
+              </FadeIn>
+            ))}
+          </div>
+        )}
 
         <FadeIn delay={400}>
-          <div className="mt-12">
+          <div className="mt-3">
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
@@ -135,7 +134,7 @@ export default function Home() {
       </div>
 
       {/* Sidebar */}
-      <div className="lg:col-span-1">
+      <div className="lg:col-span-1 space-y-3">
         <FadeIn delay={200}>
           <div className="relative">
             {/* Skeleton */}

@@ -1,6 +1,6 @@
 export default function ArticleCardSkeleton() {
   return (
-    <article className="glass-effect rounded-xl p-6 relative overflow-hidden">
+    <article className="glass-effect card-hover rounded-xl p-6 relative overflow-hidden"> {/* Removed mb-12 */}
       {/* Title skeleton */}
       <div className="h-8 w-3/4 bg-blue-900/20 rounded-lg mb-3 shimmer" />
       

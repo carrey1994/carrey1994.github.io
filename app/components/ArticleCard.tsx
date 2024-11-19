@@ -4,7 +4,7 @@ import MouseFollowGradient from './MouseFollowGradient'
 
 export default function ArticleCard({ article }: { article: Article }) {
   return (
-    <article className="glass-effect card-hover rounded-xl p-6 group relative overflow-hidden">
+    <article className="glass-effect card-hover rounded-xl p-6 group relative overflow-hidden"> {/* Removed mb-12 */}
       {/* Mouse follow gradient effect */}
       <MouseFollowGradient className="absolute inset-0 z-0" />
       
