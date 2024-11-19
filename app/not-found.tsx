@@ -1,6 +1,6 @@
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
+    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center pt-14">
       <div className="glass-effect rounded-xl p-12 max-w-lg w-full relative overflow-hidden group">
         {/* Animated background waves */}
         <div className="absolute inset-0">

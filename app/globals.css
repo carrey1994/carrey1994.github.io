@@ -177,3 +177,73 @@
   background-color: rgba(30, 58, 138, 0.1);
   border-left: 2px solid rgba(59, 130, 246, 0.5);
 }
+
+/* Fade In Up with Pulse Animation */
+@keyframes fadeInUpWithPulse {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(0) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUpWithPulse 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  opacity: 0;
+}
+
+.animate-delay-1 { animation-delay: 0.2s; }
+.animate-delay-2 { animation-delay: 0.3s; }
+.animate-delay-3 { animation-delay: 0.4s; }
+.animate-delay-4 { animation-delay: 0.5s; }
+
+/* Tooltip Fade In Animation */
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -8px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.tooltip-fade-in {
+  animation: tooltipFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Add a new animation for the icon hover */
+@keyframes iconHover {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1.1); }
+}
+
+.icon-hover {
+  animation: iconHover 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Ring Pulse Animation */
+@keyframes ringPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.1);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+.ring-pulse {
+  animation: ringPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

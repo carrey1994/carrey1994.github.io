@@ -131,20 +131,21 @@ export default function Home() {
                   { type: 'twitter', icon: Twitter, url: MOCK_PROFILE.socialLinks.twitter },
                   { type: 'linkedin', icon: Linkedin, url: MOCK_PROFILE.socialLinks.linkedin },
                   { type: 'email', icon: Mail, url: `mailto:${MOCK_PROFILE.socialLinks.email}` }
-                ].map(({ type, icon: Icon, url }) => (
+                ].map(({ type, icon: Icon, url }, index) => (
                   url && (
                     <a 
                       key={type}
                       href={url}
-                      className="group/link relative p-2 rounded-full hover:bg-blue-900/20 transition-all duration-300 hover:scale-110 hover:ring-2 hover:ring-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
+                      className={`group/link relative p-2 rounded-full hover:bg-blue-900/20 transition-all duration-200 ease-in-out
+                        focus:outline-none ring-1 ring-blue-500/20 hover:ring-2 hover:ring-blue-500/40 opacity-0 animate-fade-in-up animate-delay-${index + 1}
+                        hover:shadow-[0_0_10px_rgba(59,130,246,0.1)] active:scale-95`}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={type.charAt(0).toUpperCase() + type.slice(1)}
                     >
-                      <Icon className="w-5 h-5 text-gray-400 group-hover/link:text-blue-400 transition-colors duration-300" />
-                      <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-blue-900/90 text-xs rounded opacity-0 group-hover/link:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                      </span>
+                      <div className="group-hover/link:icon-hover">
+                        <Icon className="w-5 h-5 text-blue-500 group-hover:text-blue-400 transition-all duration-200 ease-in-out drop-shadow-[0_0_3px_rgba(59,130,246,0.3)]" />
+                      </div>
                     </a>
                   )
                 ))}
