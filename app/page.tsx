@@ -29,15 +29,15 @@ export default function Home() {
   const paginatedArticles = sortedArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE)
 
   useEffect(() => {
-    // Simulate initial loading with timing that matches shimmer animation
+    // Simulate initial loading - same timing for both articles and profile
     const contentTimer = setTimeout(() => {
       setIsLoading(false)
-    }, 800)
+    }, 1000)
 
-    // Adjust profile loading delay to match shimmer animation cycles
+    // Match profile loading with article loading
     const profileTimer = setTimeout(() => {
       setProfileLoading(false)
-    }, 2000) // Match the shimmer animation duration for a smooth transition
+    }, 1000)
 
     return () => {
       clearTimeout(contentTimer)
@@ -107,14 +107,14 @@ export default function Home() {
         <FadeIn delay={200}>
           <div className="relative">
             {/* Skeleton */}
-            <div className={`absolute inset-0 transition-all duration-700 ease-out ${
+            <div className={`absolute inset-0 transition-all duration-300 ease-out ${
               !profileLoading ? 'opacity-0 pointer-events-none transform translate-y-4' : 'opacity-100 transform translate-y-0'
             }`}>
               <ProfileSkeleton />
             </div>
 
             {/* Actual content */}
-            <div className={`transition-all duration-700 ease-out ${
+            <div className={`transition-all duration-300 ease-out ${
               profileLoading ? 'opacity-0 pointer-events-none transform translate-y-4' : 'opacity-100 transform translate-y-0'
             }`}>
               <div className="glass-effect rounded-xl p-8 sticky top-10 relative group overflow-hidden">
