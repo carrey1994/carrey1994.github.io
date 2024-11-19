@@ -10,7 +10,7 @@ const generateDate = (daysAgo: number) => {
 export const MOCK_PROFILE: Profile = {
   name: "James Wu",
   bio: "Software engineer passionate about web development and data science. I write about programming, algorithms, and web technologies.",
-  avatar: "/avatar.jpg",
+  avatar: "/tower.jpeg",
   socialLinks: {
     github: "https://github.com/carrey1994",
     twitter: "https://twitter.com",

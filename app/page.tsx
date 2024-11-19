@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import ArticleCard from './components/ArticleCard'
+import TagList from './components/TagList'
 import ProfileSkeleton from './components/ProfileSkeleton'
 import ArticleCardSkeleton from './components/ArticleCardSkeleton'
 import Pagination from './components/Pagination'
@@ -10,6 +11,7 @@ import Image from 'next/image'
 import MouseFollowGradient from './components/MouseFollowGradient'
 import FadeIn from './components/FadeIn'
 import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
+import TagListSkeleton from './components/TagListSkeleton'
 
 const ITEMS_PER_PAGE = 5 // Set to exactly 5 articles per page
 
@@ -18,30 +20,53 @@ export default function Home() {
   const [imageError, setImageError] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [profileLoading, setProfileLoading] = useState(true)
+  const [tagsLoading, setTagsLoading] = useState(true)
+  const [selectedTag, setSelectedTag] = useState<string | null>(null)
+  const [isFiltering, setIsFiltering] = useState(false)
+  const [isTitleTransitioning, setIsTitleTransitioning] = useState(false)
+  const articlesRef = useRef<HTMLDivElement>(null)
   
   // Sort articles by date (most recent first)
   const sortedArticles = [...MOCK_ARTICLES].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   )
+
+  // Filter articles based on selected tag
+  const filteredArticles = useMemo(() => {
+    if (!selectedTag) return sortedArticles
+    return sortedArticles.filter(article => 
+      article.tags.some(tag => tag.name === selectedTag)
+    )
+  }, [sortedArticles, selectedTag])
   
-  const totalPages = Math.ceil(sortedArticles.length / ITEMS_PER_PAGE) // Should be exactly 10 pages
+  const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE)
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-  const paginatedArticles = sortedArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+  const paginatedArticles = filteredArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+
+  // Reset to first page when changing tags
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedTag])
 
   useEffect(() => {
-    // Simulate initial loading - same timing for both articles and profile
+    // Simulate initial loading
     const contentTimer = setTimeout(() => {
       setIsLoading(false)
     }, 1000)
 
-    // Match profile loading with article loading
     const profileTimer = setTimeout(() => {
       setProfileLoading(false)
     }, 1000)
 
+    // Slightly delay tags loading to create a cascade effect
+    const tagsTimer = setTimeout(() => {
+      setTagsLoading(false)
+    }, 1200)
+
     return () => {
       clearTimeout(contentTimer)
       clearTimeout(profileTimer)
+      clearTimeout(tagsTimer)
     }
   }, [])
 
@@ -59,14 +84,18 @@ export default function Home() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8">
       {/* Main Content */}
-      <div className="lg:col-span-2 space-y-8">
+      <div ref={articlesRef} className="lg:col-span-2 space-y-8">
         <FadeIn>
           <div className="flex justify-between items-center">
-            <h1 className="text-4xl font-bold animate-text-gradient">
-              Latest Articles
+            <h1 className={`text-4xl font-bold animate-text-gradient transition-opacity duration-300 ${
+              isTitleTransitioning ? 'opacity-0' : 'opacity-100'
+            }`}>
+              {selectedTag ? `Articles about ${selectedTag}` : 'Latest Articles'}
             </h1>
-            <p className="text-gray-400">
-              {sortedArticles.length} articles
+            <p className={`text-gray-400 transition-opacity duration-300 ${
+              isTitleTransitioning ? 'opacity-0' : 'opacity-100'
+            }`}>
+              {filteredArticles.length} article{filteredArticles.length !== 1 ? 's' : ''}
             </p>
           </div>
         </FadeIn>
@@ -80,12 +109,15 @@ export default function Home() {
               </FadeIn>
             ))
           ) : (
-            // Show exactly 5 articles
-            paginatedArticles.map((article, index) => (
-              <FadeIn key={article.id} delay={index * 100}>
-                <ArticleCard article={article} />
-              </FadeIn>
-            ))
+            <div className={`transition-all duration-300 ${
+              isFiltering ? 'opacity-50 scale-[0.99]' : 'opacity-100 scale-100'
+            }`}>
+              {paginatedArticles.map((article, index) => (
+                <FadeIn key={article.id} delay={index * 100}>
+                  <ArticleCard article={article} />
+                </FadeIn>
+              ))}
+            </div>
           )}
         </div>
 
@@ -122,20 +154,27 @@ export default function Home() {
                 
                 <div className="text-center relative z-10">
                   {!imageError ? (
-                    <div className="relative w-40 h-40 mx-auto mb-6">
+                    <div className="relative w-32 h-32 mx-auto mb-6 group/image">
+                      {/* Base gradient background */}
                       <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-900/30 to-cyan-900/30 animate-pulse"></div>
-                      <div className="relative w-full h-full rounded-full overflow-hidden ring-2 ring-blue-500/20 transition-all duration-300 group-hover:ring-blue-400/40">
+                      {/* Interactive gradient overlay */}
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5 group-hover/image:from-blue-500/10 group-hover/image:via-transparent group-hover/image:to-cyan-500/10 transition-all duration-300"></div>
+                      {/* Image container */}
+                      <div className="relative w-full h-full rounded-full overflow-hidden ring-1 ring-blue-500/20 transition-all duration-300 group-hover:ring-blue-400/30 group-hover:shadow-lg group-hover:shadow-blue-500/10">
+                        <div className="absolute inset-0 bg-gradient-to-t from-blue-950/20 to-transparent group-hover:from-blue-950/0 transition-colors duration-300"></div>
                         <Image
                           src={MOCK_PROFILE.avatar}
                           alt={MOCK_PROFILE.name}
                           fill
-                          className="object-cover transition-transform duration-300 group-hover:scale-110"
+                          className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                           onError={() => setImageError(true)}
+                          priority
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         />
                       </div>
                     </div>
                   ) : (
-                    <div className="w-40 h-40 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-900/30 to-cyan-900/30 flex items-center justify-center ring-2 ring-blue-500/20 group-hover:ring-blue-400/40 transition-all duration-300">
+                    <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-900/30 to-cyan-900/30 flex items-center justify-center ring-1 ring-blue-500/20 group-hover:ring-blue-400/30 group-hover:shadow-lg group-hover:shadow-blue-500/10 transition-all duration-300">
                       <span className="text-4xl font-bold animate-text-gradient">
                         {MOCK_PROFILE.name.charAt(0)}
                       </span>
@@ -178,6 +217,36 @@ export default function Home() {
                 <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-blue-500/0 group-hover:border-blue-500/20 rounded-tl-xl transition-colors duration-500" />
                 <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-blue-500/0 group-hover:border-blue-500/20 rounded-br-xl transition-colors duration-500" />
               </div>
+            </div>
+          </div>
+        </FadeIn>
+        
+        <FadeIn delay={300}>
+          <div className="relative">
+            {/* Tags Skeleton */}
+            <div className={`absolute inset-0 transition-all duration-300 ease-out ${
+              !tagsLoading ? 'opacity-0 pointer-events-none transform translate-y-4' : 'opacity-100 transform translate-y-0'
+            }`}>
+              <TagListSkeleton />
+            </div>
+
+            {/* Actual Tags */}
+            <div className={`transition-all duration-300 ease-out ${
+              tagsLoading ? 'opacity-0 pointer-events-none transform translate-y-4' : 'opacity-100 transform translate-y-0'
+            }`}>
+              <TagList 
+                selectedTag={selectedTag} 
+                onTagSelect={(tag) => {
+                  setIsFiltering(true)
+                  setIsTitleTransitioning(true)
+                  setSelectedTag(tag)
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                  setTimeout(() => {
+                    setIsFiltering(false)
+                    setIsTitleTransitioning(false)
+                  }, 300)
+                }}
+              />
             </div>
           </div>
         </FadeIn>

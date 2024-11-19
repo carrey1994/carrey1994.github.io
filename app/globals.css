@@ -266,6 +266,26 @@
   animation: iconHover 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* Soft Pulse Animation */
+@keyframes softPulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+.animate-soft-pulse {
+  animation: softPulse 2s ease-in-out infinite;
+}
+
 /* Ring Pulse Animation */
 @keyframes ringPulse {
   0% {
