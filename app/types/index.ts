@@ -18,8 +18,9 @@ export interface Profile {
   bio: string;
   avatar: string;
   socialLinks: {
-    github?: string;
-    twitter?: string;
-    linkedin?: string;
+    github: string;
+    twitter: string;
+    linkedin: string;
+    email: string;
   };
 }

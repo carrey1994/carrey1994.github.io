@@ -8,6 +8,7 @@ import { MOCK_ARTICLES, MOCK_PROFILE } from './data/mockData'
 import Image from 'next/image'
 import MouseFollowGradient from './components/MouseFollowGradient'
 import FadeIn from './components/FadeIn'
+import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
 
 const ITEMS_PER_PAGE = 5 // Set to exactly 5 articles per page
 
@@ -124,20 +125,26 @@ export default function Home() {
               <p className="text-gray-300 mb-6 leading-relaxed">
                 {MOCK_PROFILE.bio}
               </p>
-              <div className="flex justify-center space-x-6">
-                {Object.entries(MOCK_PROFILE.socialLinks).map(([platform, url]) => (
+              <div className="flex justify-center items-center space-x-4">
+                {[
+                  { type: 'github', icon: Github, url: MOCK_PROFILE.socialLinks.github },
+                  { type: 'twitter', icon: Twitter, url: MOCK_PROFILE.socialLinks.twitter },
+                  { type: 'linkedin', icon: Linkedin, url: MOCK_PROFILE.socialLinks.linkedin },
+                  { type: 'email', icon: Mail, url: `mailto:${MOCK_PROFILE.socialLinks.email}` }
+                ].map(({ type, icon: Icon, url }) => (
                   url && (
                     <a 
-                      key={platform}
+                      key={type}
                       href={url}
-                      className="group/link relative px-2 py-1"
+                      className="group/link relative p-2 rounded-full hover:bg-blue-900/20 transition-all duration-300 hover:scale-110 hover:ring-2 hover:ring-blue-500/20 focus:outline-none focus:ring-2 focus:ring-blue-500/40"
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={type.charAt(0).toUpperCase() + type.slice(1)}
                     >
-                      <span className="relative z-10 text-gray-400 group-hover/link:text-blue-400 transition-colors duration-300">
-                        {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                      <Icon className="w-5 h-5 text-gray-400 group-hover/link:text-blue-400 transition-colors duration-300" />
+                      <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-blue-900/90 text-xs rounded opacity-0 group-hover/link:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap">
+                        {type.charAt(0).toUpperCase() + type.slice(1)}
                       </span>
-                      <div className="absolute inset-0 bg-blue-900/0 group-hover/link:bg-blue-900/20 rounded-lg transition-colors duration-300"></div>
                     </a>
                   )
                 ))}

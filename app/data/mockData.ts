@@ -14,7 +14,8 @@ export const MOCK_PROFILE: Profile = {
   socialLinks: {
     github: "https://github.com/carrey1994",
     twitter: "https://twitter.com",
-    linkedin: "https://linkedin.com"
+    linkedin: "https://linkedin.com",
+    email: "james.wu@example.com"
   }
 }
 
