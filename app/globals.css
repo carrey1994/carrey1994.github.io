@@ -134,10 +134,10 @@
     transform: translateX(-100%);
     opacity: 0;
   }
-  20% {
+  10% {
     opacity: 1;
   }
-  80% {
+  90% {
     opacity: 1;
   }
   100% {
@@ -164,12 +164,13 @@
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(59, 130, 246, 0.05) 20%,
-    rgba(59, 130, 246, 0.1) 50%,
-    rgba(59, 130, 246, 0.05) 80%,
+    rgba(59, 130, 246, 0.04) 20%,
+    rgba(59, 130, 246, 0.08) 60%,
+    rgba(59, 130, 246, 0.04) 80%,
     transparent 100%
   );
-  animation: shimmer 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: shimmer 2s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 /* Shimmer effect for loading states */
