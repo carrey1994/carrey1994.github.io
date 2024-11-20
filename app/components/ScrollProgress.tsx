@@ -6,19 +6,28 @@ export default function ScrollProgress() {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
+    let rafId: number
+    
     const updateProgress = () => {
       // Calculate how far the user has scrolled
       const scrollPx = document.documentElement.scrollTop
       const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight
       const scrolled = scrollPx / winHeightPx * 100
+      
       setProgress(scrolled)
+      // Request next frame
+      rafId = requestAnimationFrame(updateProgress)
     }
 
-    // Add scroll event listener
-    window.addEventListener('scroll', updateProgress)
+    // Start the animation frame loop
+    rafId = requestAnimationFrame(updateProgress)
     
     // Cleanup
-    return () => window.removeEventListener('scroll', updateProgress)
+    return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
+    }
   }, [])
 
   return (
