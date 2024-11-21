@@ -97,3 +97,20 @@ export async function fetchTags(): Promise<Tag[]> {
     throw error;
   }
 }
+
+export async function fetchRelatedArticles(id: string): Promise<Article[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/articles/id/${id}/related`);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch related articles');
+    }
+    
+    const data = await response.json();
+    return data.map(transformArticle);
+  } catch (error) {
+    console.error('Error fetching related articles:', error);
+    return [];
+  }
+}
