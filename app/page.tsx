@@ -7,13 +7,13 @@ import ProfileSkeleton from './components/ProfileSkeleton'
 import ArticleCardSkeleton from './components/ArticleCardSkeleton'
 import Pagination from './components/Pagination'
 import { MOCK_PROFILE } from './data/mockData'
-import { fetchArticles, fetchArticlesByTag } from './utils/api'
-import type { Article } from './types'
 import Image from 'next/image'
 import MouseFollowGradient from './components/MouseFollowGradient'
 import FadeIn from './components/FadeIn'
 import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
 import TagListSkeleton from './components/TagListSkeleton'
+import { fetchArticles, fetchArticlesByTag } from './utils/api'
+import type { Article } from './types'
 
 const ITEMS_PER_PAGE = 5 // Set to exactly 5 articles per page
 
@@ -28,18 +28,13 @@ export default function Home() {
   const [isTitleTransitioning, setIsTitleTransitioning] = useState(false)
   const [articles, setArticles] = useState<Article[]>([])
   const [totalArticles, setTotalArticles] = useState(0)
+  const [error, setError] = useState<string | null>(null)
   const articlesRef = useRef<HTMLDivElement>(null)
-
-  const totalPages = Math.ceil(totalArticles / ITEMS_PER_PAGE)
-
-  // Reset to first page when changing tags
-  useEffect(() => {
-    setCurrentPage(1)
-  }, [selectedTag])
 
   useEffect(() => {
     const loadArticles = async () => {
       setIsLoading(true)
+      setError(null)
       try {
         const response = selectedTag 
           ? await fetchArticlesByTag(selectedTag, currentPage, ITEMS_PER_PAGE)
@@ -49,6 +44,7 @@ export default function Home() {
         setTotalArticles(response.total)
       } catch (error) {
         console.error('Failed to fetch articles:', error)
+        setError('Failed to load articles. Please try again later.')
         setArticles([])
         setTotalArticles(0)
       } finally {
@@ -74,6 +70,8 @@ export default function Home() {
     }
   }, [])
 
+  const totalPages = Math.ceil(totalArticles / ITEMS_PER_PAGE)
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -89,6 +87,23 @@ export default function Home() {
       setIsFiltering(false)
       setIsTitleTransitioning(false)
     }, 300)
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+        <div className="glass-effect rounded-xl p-8">
+          <h1 className="text-2xl font-bold text-red-400 mb-4">Error</h1>
+          <p className="text-gray-300 mb-6">{error}</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 rounded-full transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -127,34 +142,41 @@ export default function Home() {
                 <ArticleCard article={article} />
               </FadeIn>
             ))}
+            {articles.length === 0 && !isLoading && (
+              <div className="text-center py-8 text-gray-400">
+                No articles found{selectedTag ? ` for tag "${selectedTag}"` : ''}.
+              </div>
+            )}
           </div>
         )}
 
-        <FadeIn delay={400}>
-          <div className="mt-3">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-              itemsPerPage={ITEMS_PER_PAGE}
-              totalItems={totalArticles}
-            />
-          </div>
-        </FadeIn>
+        {totalArticles > 0 && (
+          <FadeIn delay={400}>
+            <div className="mt-3">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                itemsPerPage={ITEMS_PER_PAGE}
+                totalItems={totalArticles}
+              />
+            </div>
+          </FadeIn>
+        )}
       </div>
 
       {/* Sidebar */}
       <div className="lg:col-span-1 space-y-3">
         <FadeIn delay={200}>
           <div className="relative">
-            {/* Skeleton */}
+            {/* Profile Skeleton */}
             <div className={`absolute inset-0 transition-all duration-300 ease-out ${
               !profileLoading ? 'opacity-0 pointer-events-none transform translate-y-4' : 'opacity-100 transform translate-y-0'
             }`}>
               <ProfileSkeleton />
             </div>
 
-            {/* Actual content */}
+            {/* Profile Content */}
             <div className={`transition-all duration-300 ease-out ${
               profileLoading ? 'opacity-0 pointer-events-none transform translate-y-4' : 'opacity-100 transform translate-y-0'
             }`}>
@@ -206,12 +228,9 @@ export default function Home() {
                         <a 
                           key={type}
                           href={url}
-                          className={`group/link relative p-2 rounded-full hover:bg-blue-900/20 transition-all duration-200 ease-in-out
-                            focus:outline-none ring-1 ring-blue-500/20 hover:ring-2 hover:ring-blue-500/40 opacity-0 animate-fade-in-up animate-delay-${index + 1}
-                            hover:shadow-[0_0_10px_rgba(59,130,246,0.1)] active:scale-95`}
+                          className="group/link relative p-2 rounded-full hover:bg-blue-900/20 transition-all duration-200"
                           target="_blank"
                           rel="noopener noreferrer"
-                          aria-label={type.charAt(0).toUpperCase() + type.slice(1)}
                         >
                           <div className="group-hover/link:icon-hover">
                             <Icon className="w-5 h-5 text-blue-500 group-hover:text-blue-400 transition-all duration-200 ease-in-out drop-shadow-[0_0_3px_rgba(59,130,246,0.3)]" />

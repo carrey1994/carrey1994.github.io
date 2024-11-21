@@ -4,16 +4,14 @@ import MouseFollowGradient from './MouseFollowGradient'
 
 export default function ArticleCard({ article }: { article: Article }) {
   return (
-    <article className="glass-effect card-hover rounded-xl p-6 group relative overflow-hidden"> {/* Removed mb-12 */}
-      {/* Mouse follow gradient effect */}
+    <article className="glass-effect card-hover rounded-xl p-6 group relative overflow-hidden">
       <MouseFollowGradient className="absolute inset-0 z-0" />
       
-      {/* Subtle animated gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-900/5 to-cyan-900/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       <h2 className="text-2xl font-bold mb-3 relative z-10">
         <Link 
-          href={`/articles/${article.slug}`} 
+          href={`/articles/${article.id}`} 
           className="relative inline-block animate-text-gradient hover:opacity-90 transition-all duration-300 group/title"
         >
           {article.title}
@@ -21,21 +19,13 @@ export default function ArticleCard({ article }: { article: Article }) {
         </Link>
       </h2>
       <div className="flex flex-wrap gap-2 mb-4 relative z-10">
-        {article.tags.map((tag, index) => (
+        {article.tags.map((tag) => (
           <span 
             key={tag.id}
             className="bg-blue-900/20 backdrop-blur-sm text-sm px-3 py-1 rounded-full text-blue-200 hover:text-blue-100 hover:bg-blue-800/40 transition-all duration-300 cursor-default transform hover:-translate-y-0.5 relative group/tag"
-            style={{ animationDelay: `${index * 100}ms` }}
           >
             {tag.name}
             <div className="absolute inset-0 rounded-full bg-blue-400/0 group-hover/tag:bg-blue-400/10 transition-colors duration-300" />
-            <div 
-              className="absolute inset-0 rounded-full opacity-0 group-hover/tag:opacity-100 transition-opacity duration-300"
-              style={{
-                background: 'radial-gradient(circle at center, rgba(59, 130, 246, 0.2) 0%, transparent 70%)',
-                animation: 'pulse 2s infinite'
-              }}
-            />
           </span>
         ))}
       </div>
@@ -44,7 +34,7 @@ export default function ArticleCard({ article }: { article: Article }) {
       </p>
       <div className="flex justify-between items-center relative z-10">
         <Link 
-          href={`/articles/${article.slug}`}
+          href={`/articles/${article.id}`}
           className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors group/link relative overflow-hidden px-2 py-1 -ml-2"
         >
           <span className="relative z-10">Read more</span>
@@ -64,7 +54,7 @@ export default function ArticleCard({ article }: { article: Article }) {
 
       {/* Make the entire card clickable */}
       <Link 
-        href={`/articles/${article.slug}`}
+        href={`/articles/${article.id}`}
         className="absolute inset-0 z-0"
         aria-label={`Read more about ${article.title}`}
       />

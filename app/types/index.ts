@@ -6,11 +6,20 @@ export interface Tag {
 export interface Article {
   id: string;
   title: string;
-  excerpt: string;
+  excerpt: string | null;
   content: string;
   tags: Tag[];
   createdAt: Date;
-  slug: string;
+  published: boolean;
+  coverImage?: string | null;
+  updatedAt?: Date;
+}
+
+export interface ArticleListResponse {
+  articles: Article[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface Profile {

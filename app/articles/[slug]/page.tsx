@@ -4,13 +4,18 @@ import { useEffect, useState } from 'react'
 import { fetchArticleBySlug } from '../../utils/api'
 import { formatContent } from '../../utils/markdown'
 import type { Article } from '../../types'
-import { notFound } from 'next/navigation'
+import { notFound, useRouter } from 'next/navigation'
 import CodeBlock from '../../components/CodeBlock'
 import FadeIn from '../../components/FadeIn'
+
+// Remove static export requirement since we're using client-side rendering
+export const dynamic = 'force-dynamic'
+export const dynamicParams = true
 
 export default function ArticlePage({ params }: { params: { slug: string } }) {
   const [article, setArticle] = useState<Article | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
     const loadArticle = async () => {
@@ -19,14 +24,14 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         setArticle(data)
       } catch (error) {
         console.error('Failed to fetch article:', error)
-        notFound()
+        router.push('/404')
       } finally {
         setIsLoading(false)
       }
     }
 
     loadArticle()
-  }, [params.slug])
+  }, [params.slug, router])
 
   if (isLoading) {
     return (
