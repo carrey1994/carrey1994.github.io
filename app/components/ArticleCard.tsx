@@ -19,7 +19,7 @@ export default function ArticleCard({ article }: { article: Article }) {
         </Link>
       </h2>
       <div className="flex flex-wrap gap-2 mb-4 relative z-10">
-        {article.tags.map((tag) => (
+        {article.tags?.map((tag) => (
           <span 
             key={tag.id}
             className="bg-blue-900/20 backdrop-blur-sm text-sm px-3 py-1 rounded-full text-blue-200 hover:text-blue-100 hover:bg-blue-800/40 transition-all duration-300 cursor-default transform hover:-translate-y-0.5 relative group/tag"
