@@ -1,6 +1,8 @@
 'use client'
 
-import { MOCK_ARTICLES } from '../data/mockData'
+import { useEffect, useState } from 'react'
+import { fetchTags } from '../utils/api'
+import type { Tag } from '../types'
 import MouseFollowGradient from './MouseFollowGradient'
 
 interface TagListProps {
@@ -9,49 +11,75 @@ interface TagListProps {
 }
 
 export default function TagList({ selectedTag, onTagSelect }: TagListProps) {
-  const tagCounts = MOCK_ARTICLES.reduce((acc, article) => {
-    article.tags.forEach(tag => {
-      acc[tag.name] = (acc[tag.name] || 0) + 1
-    })
-    return acc
-  }, {} as Record<string, number>)
+  const [tags, setTags] = useState<Tag[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  const sortedTags = Object.entries(tagCounts)
-    .sort(([, a], [, b]) => b - a)
+  useEffect(() => {
+    const loadTags = async () => {
+      try {
+        const fetchedTags = await fetchTags()
+        setTags(fetchedTags)
+      } catch (error) {
+        console.error('Failed to fetch tags:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadTags()
+  }, [])
+
+  if (isLoading) {
+    return (
+      <div className="glass-effect rounded-xl p-6">
+        <div className="animate-pulse space-y-2">
+          <div className="h-6 bg-gray-700 rounded w-1/4 mb-4"></div>
+          <div className="flex flex-wrap gap-2">
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="h-8 bg-gray-700 rounded-full w-20"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="glass-effect rounded-lg p-5 mt-4 relative group">
+    <div className="glass-effect rounded-xl p-6 relative group overflow-hidden">
       <MouseFollowGradient className="absolute inset-0" />
-      <div className="absolute inset-0 bg-gradient-to-br from-black/98 to-black/95 rounded-lg" />
       
       <div className="relative z-10">
-        <h3 className="text-sm font-medium mb-4 uppercase tracking-wider text-blue-400/70">Topics</h3>
-        <div className="flex flex-wrap gap-2.5">
-          {sortedTags.map(([tag, count]) => (
-            <button 
-              key={tag}
-              onClick={() => onTagSelect(selectedTag === tag ? null : tag)}
-              className={`px-3.5 py-[6px] rounded-full text-[13px] font-medium leading-relaxed
-                transition-all duration-200 ease-out cursor-pointer group/tag
-                backdrop-blur-sm hover:-translate-y-0.5 ring-1
-                active:translate-y-0 active:scale-95 hover:shadow-[0_0_10px_rgba(59,130,246,0.1)]
-                ${selectedTag === tag 
-                  ? 'bg-black/95 text-blue-300 -translate-y-0.5 ring-blue-500/30 shadow-[0_0_10px_rgba(59,130,246,0.1)]' 
-                  : 'bg-black/80 text-blue-400 hover:bg-black/90 ring-blue-500/10 hover:ring-blue-500/20'
+        <h2 className="text-xl font-bold mb-4 animate-text-gradient">Topics</h2>
+        <div className="flex flex-wrap gap-2">
+          <button
+            onClick={() => onTagSelect(null)}
+            className={`px-3 py-1 rounded-full text-sm transition-all duration-300 transform hover:-translate-y-0.5
+              ${!selectedTag 
+                ? 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30' 
+                : 'bg-blue-900/20 text-blue-200 hover:bg-blue-800/40'
+              }`}
+          >
+            All
+          </button>
+          {tags.map((tag) => (
+            <button
+              key={tag.id}
+              onClick={() => onTagSelect(tag.name)}
+              className={`px-3 py-1 rounded-full text-sm transition-all duration-300 transform hover:-translate-y-0.5
+                ${selectedTag === tag.name
+                  ? 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30'
+                  : 'bg-blue-900/20 text-blue-200 hover:bg-blue-800/40'
                 }`}
             >
-              <span className="group-hover/tag:text-blue-300 transition-colors duration-200">{tag}</span>
-              <span className={`ml-1.5 text-[11px] inline-block opacity-70 group-hover/tag:opacity-90 transition-opacity duration-200 ${
-                selectedTag === tag ? 'text-blue-300 opacity-90' : 'text-blue-400'
-              }`}>({count})</span>
+              {tag.name}
             </button>
           ))}
         </div>
       </div>
 
       {/* Corner accents */}
-      <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-blue-500/10 rounded-tl-lg" />
-      <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-blue-500/10 rounded-br-lg" />
+      <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-blue-500/0 group-hover:border-blue-500/20 rounded-tl-xl transition-colors duration-500" />
+      <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-blue-500/0 group-hover:border-blue-500/20 rounded-br-xl transition-colors duration-500" />
     </div>
   )
 }

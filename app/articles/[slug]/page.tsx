@@ -1,90 +1,99 @@
-import { MOCK_ARTICLES } from '@/app/data/mockData'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { fetchArticleBySlug } from '../../utils/api'
+import { formatContent } from '../../utils/markdown'
+import type { Article } from '../../types'
 import { notFound } from 'next/navigation'
-import ClientArticlePage from './ClientArticlePage'
+import CodeBlock from '../../components/CodeBlock'
+import FadeIn from '../../components/FadeIn'
 
-const formatContent = (content: string) => {
-  const lines = content.split('\n')
-  let inCodeBlock = false
-  let currentCodeBlock: string[] = []
-  let currentLanguage = ''
-  const formattedContent: Array<{ type: 'text' | 'code'; content: string; language?: string }> = []
+export default function ArticlePage({ params }: { params: { slug: string } }) {
+  const [article, setArticle] = useState<Article | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  lines.forEach(line => {
-    const trimmedLine = line.trim()
-    
-    if (trimmedLine.startsWith('```')) {
-      if (inCodeBlock) {
-        formattedContent.push({
-          type: 'code',
-          content: currentCodeBlock.join('\n'),
-          language: currentLanguage
-        })
-        currentCodeBlock = []
-        currentLanguage = ''
-        inCodeBlock = false
-      } else {
-        inCodeBlock = true
-        currentLanguage = trimmedLine.slice(3).trim() || 'typescript'
+  useEffect(() => {
+    const loadArticle = async () => {
+      try {
+        const data = await fetchArticleBySlug(params.slug)
+        setArticle(data)
+      } catch (error) {
+        console.error('Failed to fetch article:', error)
+        notFound()
+      } finally {
+        setIsLoading(false)
       }
-    } else if (inCodeBlock) {
-      currentCodeBlock.push(line)
-    } else if (trimmedLine) {
-      formattedContent.push({
-        type: 'text',
-        content: line
-      })
     }
-  })
 
-  return formattedContent
-}
+    loadArticle()
+  }, [params.slug])
 
-// Generate static paths at build time
-export function generateStaticParams() {
-  return MOCK_ARTICLES.map((article) => ({
-    slug: article.slug,
-  }))
-}
-
-// Get article data
-async function getArticleData(slug: string) {
-  // Add a small delay to ensure async behavior
-  await new Promise(resolve => setTimeout(resolve, 0))
-  
-  const article = MOCK_ARTICLES.find(article => article.slug === slug)
-  if (!article) return null
-
-  return {
-    article,
-    formattedContent: formatContent(article.content),
-    relatedArticles: MOCK_ARTICLES
-      .filter(a => 
-        a.id !== article.id && 
-        a.tags.some(tag => article.tags.some(currentTag => currentTag.id === tag.id))
-      )
-      .slice(0, 3)
-  }
-}
-
-// Main page component
-export default async function Page(props: { params: Promise<{ slug: string }> }) {
-  // Await the params if it is wrapped in a Promise
-  const { slug } = await props.params;
-
-  // Fetch the article data using the slug
-  const data = await getArticleData(slug);
-
-  // Handle cases where data is not found
-  if (!data) {
-    notFound();
+  if (isLoading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8 animate-pulse">
+        <div className="h-12 bg-gray-700 rounded-lg mb-4 w-3/4"></div>
+        <div className="flex gap-2 mb-6">
+          {[1, 2].map((i) => (
+            <div key={i} className="h-6 w-20 bg-gray-700 rounded-full"></div>
+          ))}
+        </div>
+        <div className="space-y-4">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className="h-4 bg-gray-700 rounded w-full"></div>
+          ))}
+        </div>
+      </div>
+    )
   }
 
-  // Render the client-side article page
+  if (!article) {
+    return notFound()
+  }
+
+  const formattedContent = formatContent(article.content)
+
   return (
-    <ClientArticlePage
-      article={data.article}
-      formattedContent={data.formattedContent}
-      relatedArticles={data.relatedArticles}
-    />
-  );
+    <FadeIn>
+      <article className="max-w-4xl mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold mb-4 animate-text-gradient">
+          {article.title}
+        </h1>
+        
+        <div className="flex gap-2 mb-6">
+          {article.tags.map((tag) => (
+            <span
+              key={tag.id}
+              className="bg-blue-900/20 backdrop-blur-sm text-blue-200 px-3 py-1 rounded-full text-sm
+                hover:text-blue-100 hover:bg-blue-800/40 transition-all duration-300 cursor-default
+                transform hover:-translate-y-0.5"
+            >
+              {tag.name}
+            </span>
+          ))}
+        </div>
+
+        <div className="prose prose-invert max-w-none">
+          {formattedContent.map((block, index) => (
+            <div key={index} className="mb-4">
+              {block.type === 'code' ? (
+                <CodeBlock code={block.content} language={block.language || 'typescript'} />
+              ) : (
+                <p className="text-gray-300">{block.content}</p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 pt-6 border-t border-gray-800">
+          <time className="text-sm text-gray-400">
+            Published on {new Date(article.createdAt).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </time>
+        </div>
+      </article>
+    </FadeIn>
+  )
 }

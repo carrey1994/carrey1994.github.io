@@ -1,12 +1,14 @@
 'use client'
 
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import ArticleCard from './components/ArticleCard'
 import TagList from './components/TagList'
 import ProfileSkeleton from './components/ProfileSkeleton'
 import ArticleCardSkeleton from './components/ArticleCardSkeleton'
 import Pagination from './components/Pagination'
-import { MOCK_ARTICLES, MOCK_PROFILE } from './data/mockData'
+import { MOCK_PROFILE } from './data/mockData'
+import { fetchArticles, fetchArticlesByTag } from './utils/api'
+import type { Article } from './types'
 import Image from 'next/image'
 import MouseFollowGradient from './components/MouseFollowGradient'
 import FadeIn from './components/FadeIn'
@@ -24,24 +26,11 @@ export default function Home() {
   const [selectedTag, setSelectedTag] = useState<string | null>(null)
   const [isFiltering, setIsFiltering] = useState(false)
   const [isTitleTransitioning, setIsTitleTransitioning] = useState(false)
+  const [articles, setArticles] = useState<Article[]>([])
+  const [totalArticles, setTotalArticles] = useState(0)
   const articlesRef = useRef<HTMLDivElement>(null)
-  
-  // Sort articles by date (most recent first)
-  const sortedArticles = [...MOCK_ARTICLES].sort(
-    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  )
 
-  // Filter articles based on selected tag
-  const filteredArticles = useMemo(() => {
-    if (!selectedTag) return sortedArticles
-    return sortedArticles.filter(article => 
-      article.tags.some(tag => tag.name === selectedTag)
-    )
-  }, [sortedArticles, selectedTag])
-  
-  const totalPages = Math.ceil(filteredArticles.length / ITEMS_PER_PAGE)
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
-  const paginatedArticles = filteredArticles.slice(startIndex, startIndex + ITEMS_PER_PAGE)
+  const totalPages = Math.ceil(totalArticles / ITEMS_PER_PAGE)
 
   // Reset to first page when changing tags
   useEffect(() => {
@@ -49,36 +38,57 @@ export default function Home() {
   }, [selectedTag])
 
   useEffect(() => {
-    // Simulate initial loading
-    const contentTimer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1000)
+    const loadArticles = async () => {
+      setIsLoading(true)
+      try {
+        const response = selectedTag 
+          ? await fetchArticlesByTag(selectedTag, currentPage, ITEMS_PER_PAGE)
+          : await fetchArticles(currentPage, ITEMS_PER_PAGE)
+        
+        setArticles(response.articles)
+        setTotalArticles(response.total)
+      } catch (error) {
+        console.error('Failed to fetch articles:', error)
+        setArticles([])
+        setTotalArticles(0)
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
+    loadArticles()
+  }, [currentPage, selectedTag])
+
+  useEffect(() => {
     const profileTimer = setTimeout(() => {
       setProfileLoading(false)
     }, 1000)
 
-    // Slightly delay tags loading to create a cascade effect
     const tagsTimer = setTimeout(() => {
       setTagsLoading(false)
     }, 1200)
 
     return () => {
-      clearTimeout(contentTimer)
       clearTimeout(profileTimer)
       clearTimeout(tagsTimer)
     }
   }, [])
 
   const handlePageChange = (page: number) => {
-    setIsLoading(true)
     setCurrentPage(page)
-    // Scroll to top when changing pages
     window.scrollTo({ top: 0, behavior: 'smooth' })
-    // Simulate page loading delay
+  }
+
+  const handleTagSelect = (tag: string | null) => {
+    setIsFiltering(true)
+    setIsTitleTransitioning(true)
+    setSelectedTag(tag)
+    setCurrentPage(1)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     setTimeout(() => {
-      setIsLoading(false)
-    }, 500)
+      setIsFiltering(false)
+      setIsTitleTransitioning(false)
+    }, 300)
   }
 
   return (
@@ -95,7 +105,7 @@ export default function Home() {
             <p className={`text-gray-400 transition-opacity duration-300 ${
               isTitleTransitioning ? 'opacity-0' : 'opacity-100'
             }`}>
-              {filteredArticles.length} article{filteredArticles.length !== 1 ? 's' : ''}
+              {totalArticles} article{totalArticles !== 1 ? 's' : ''}
             </p>
           </div>
         </FadeIn>
@@ -112,7 +122,7 @@ export default function Home() {
           <div className={`space-y-3 transition-all duration-300 ${
             isFiltering ? 'opacity-50 scale-[0.99]' : 'opacity-100 scale-100'
           }`}>
-            {paginatedArticles.map((article, index) => (
+            {articles.map((article, index) => (
               <FadeIn key={article.id} delay={index * 100}>
                 <ArticleCard article={article} />
               </FadeIn>
@@ -127,7 +137,7 @@ export default function Home() {
               totalPages={totalPages}
               onPageChange={handlePageChange}
               itemsPerPage={ITEMS_PER_PAGE}
-              totalItems={sortedArticles.length}
+              totalItems={totalArticles}
             />
           </div>
         </FadeIn>
@@ -235,16 +245,7 @@ export default function Home() {
             }`}>
               <TagList 
                 selectedTag={selectedTag} 
-                onTagSelect={(tag) => {
-                  setIsFiltering(true)
-                  setIsTitleTransitioning(true)
-                  setSelectedTag(tag)
-                  window.scrollTo({ top: 0, behavior: 'smooth' })
-                  setTimeout(() => {
-                    setIsFiltering(false)
-                    setIsTitleTransitioning(false)
-                  }, 300)
-                }}
+                onTagSelect={handleTagSelect}
               />
             </div>
           </div>
