@@ -1,0 +1,68 @@
+.articleContent {
+  @apply prose prose-invert max-w-none;
+}
+
+.articleContent pre {
+  @apply bg-gray-900/50 rounded-lg p-4 my-4 overflow-x-auto backdrop-blur-sm;
+}
+
+.articleContent code {
+  @apply bg-blue-900/20 text-blue-300 px-1 py-0.5 rounded;
+}
+
+.articleContent pre code {
+  @apply bg-transparent p-0;
+}
+
+.articleContent h2 {
+  @apply text-2xl font-bold mb-4 mt-8 text-blue-200;
+}
+
+.articleContent h3 {
+  @apply text-xl font-bold mb-3 mt-6 text-blue-200;
+}
+
+.articleContent p {
+  @apply text-gray-300 leading-relaxed mb-4;
+}
+
+.articleContent ul {
+  @apply list-disc list-inside mb-4 space-y-2;
+}
+
+.articleContent ol {
+  @apply list-decimal list-inside mb-4 space-y-2;
+}
+
+.articleContent li {
+  @apply text-gray-300;
+}
+
+.articleContent blockquote {
+  @apply border-l-4 border-blue-500/20 pl-4 italic text-gray-400 my-4;
+}
+
+.articleContent a {
+  @apply text-blue-400 hover:text-blue-300 transition-colors;
+}
+
+.articleContent img {
+  @apply rounded-lg;
+}
+
+.articleContent table {
+  @apply w-full border-collapse my-4;
+}
+
+.articleContent th,
+.articleContent td {
+  @apply border border-gray-700 px-4 py-2;
+}
+
+.articleContent th {
+  @apply bg-gray-800/50;
+}
+
+.articleContent tr:nth-child(even) {
+  @apply bg-gray-900/30;
+}

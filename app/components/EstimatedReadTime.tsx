@@ -6,7 +6,6 @@ interface EstimatedReadTimeProps {
 }
 
 export default function EstimatedReadTime({ content, className = '' }: EstimatedReadTimeProps) {
-  // Average reading speed (words per minute)
   const WORDS_PER_MINUTE = 200
   
   const getReadingTime = () => {
@@ -18,7 +17,7 @@ export default function EstimatedReadTime({ content, className = '' }: Estimated
   const readingTime = getReadingTime()
 
   return (
-    <div className={`flex items-center gap-2 text-sm ${className}`}>
+    <div className={`inline-flex items-center gap-1.5 text-sm text-gray-400 ${className}`}>
       <svg 
         className="w-4 h-4 text-blue-400" 
         fill="none" 
@@ -32,7 +31,7 @@ export default function EstimatedReadTime({ content, className = '' }: Estimated
           d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" 
         />
       </svg>
-      <span className="text-gray-400">
+      <span>
         {readingTime} min read
       </span>
     </div>

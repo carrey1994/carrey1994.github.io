@@ -8,45 +8,64 @@ interface Heading {
   level: number
 }
 
-export default function TableOfContents() {
+interface TableOfContentsProps {
+  content: string;
+}
+
+export default function TableOfContents({ content }: TableOfContentsProps) {
   const [headings, setHeadings] = useState<Heading[]>([])
   const [activeId, setActiveId] = useState<string>('')
 
   useEffect(() => {
-    // Get all h2 elements from the article
-    const elements = Array.from(document.querySelectorAll('h2'))
+    // Parse headings from content
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(content, 'text/html');
+    
+    // Get all h2 and h3 elements
+    const elements = Array.from(doc.querySelectorAll('h2, h3'))
       .map((element, index) => ({
         id: `heading-${index}`,
         text: element.textContent || '',
-        level: 2,
+        level: parseInt(element.tagName[1]),
         element
-      }))
+      }));
 
-    // Add IDs to the headings if they don't have them
-    elements.forEach(({ id, element }) => {
-      if (!element.id) {
-        element.id = id
-      }
-    })
-
-    setHeadings(elements)
-
-    // Intersection Observer for active heading
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id)
+    // Wait for the content to be rendered in the DOM
+    setTimeout(() => {
+      // Get the actual elements from the rendered content
+      const renderedElements = Array.from(document.querySelectorAll('h2, h3'))
+        .map((element, index) => {
+          const id = `heading-${index}`;
+          if (!element.id) {
+            element.id = id;
           }
-        })
-      },
-      { rootMargin: '-20% 0px -80% 0px' }
-    )
+          return {
+            id,
+            text: element.textContent || '',
+            level: parseInt(element.tagName[1]),
+            element
+          };
+        });
 
-    elements.forEach(({ element }) => observer.observe(element))
+      setHeadings(renderedElements);
 
-    return () => observer.disconnect()
-  }, [])
+      // Intersection Observer for active heading
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveId(entry.target.id)
+            }
+          })
+        },
+        { rootMargin: '-20% 0px -80% 0px' }
+      )
+
+      renderedElements.forEach(({ element }) => observer.observe(element))
+
+      return () => observer.disconnect()
+    }, 100);
+  }, [content])
 
   const scrollToHeading = (id: string) => {
     const element = document.getElementById(id)
@@ -64,7 +83,12 @@ export default function TableOfContents() {
       </h3>
       <ul className="space-y-3">
         {headings.map((heading) => (
-          <li key={heading.id}>
+          <li 
+            key={heading.id}
+            style={{
+              paddingLeft: heading.level === 3 ? '1rem' : '0'
+            }}
+          >
             <button
               onClick={() => scrollToHeading(heading.id)}
               className={`text-left w-full group transition-all duration-300 ${
