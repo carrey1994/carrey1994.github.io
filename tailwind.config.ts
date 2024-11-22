@@ -29,10 +29,40 @@ const config: Config = {
           },
         },
       }),
+      boxShadow: {
+        'glow': '0 0 8px rgba(96, 165, 250, 0.5)', // blue-400 with 0.5 opacity
+        'glow-lg': '0 0 12px rgba(96, 165, 250, 0.5)',
+        'glow-xl': '0 0 16px rgba(96, 165, 250, 0.5)',
+      },
+      animation: {
+        'text-gradient': 'text-gradient 8s linear infinite',
+        'glow-pulse': 'glow-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      },
+      keyframes: {
+        'text-gradient': {
+          '0%, 100%': {
+            'background-size': '200% 200%',
+            'background-position': 'left center',
+          },
+          '50%': {
+            'background-size': '200% 200%',
+            'background-position': 'right center',
+          },
+        },
+        'glow-pulse': {
+          '0%, 100%': {
+            opacity: '1',
+          },
+          '50%': {
+            opacity: '0.5',
+          },
+        },
+      },
     },
   },
   plugins: [
     require('@tailwindcss/typography'),
+    require('tailwind-scrollbar')({ nocompatible: true }),
   ],
   darkMode: 'class',
 }

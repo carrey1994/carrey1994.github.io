@@ -2,57 +2,122 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --card-blur: 12px;
-  }
+/* Custom CSS Variables */
+:root {
+  --card-blur: 12px;
+  --shimmer-color-from: rgba(59, 130, 246, 0.02);
+  --shimmer-color-mid: rgba(59, 130, 246, 0.1);
+  --shimmer-color-to: rgba(59, 130, 246, 0.02);
 }
 
-/* Wave Animation */
-@keyframes wave {
+/* Animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes highlight {
   0% {
-    transform: translateX(-50%) translateY(0) rotate(0deg);
-  }
-  50% {
-    transform: translateX(-50%) translateY(-2%) rotate(180deg);
+    background-color: rgba(59, 130, 246, 0.2);
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    border-radius: 0.5rem;
   }
   100% {
-    transform: translateX(-50%) translateY(0) rotate(360deg);
+    background-color: transparent;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
-.wave-animation {
-  background: radial-gradient(circle at center, #1e3a8a 0%, transparent 70%);
-  width: 200%;
-  aspect-ratio: 1;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform-origin: center center;
-  border-radius: 40%;
-  animation: wave 20s infinite linear;
+@keyframes text-gradient {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+/* Glass Effects */
+.glass-effect {
+  @apply backdrop-blur-[var(--card-blur)] bg-[#0a1120]/40 border border-blue-900/30;
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(10, 17, 32, 0.8);
+/* Loading States */
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--shimmer-color-from) 25%,
+    var(--shimmer-color-mid) 37%,
+    var(--shimmer-color-to) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(30, 58, 138, 0.5);
-  border-radius: 5px;
+/* Text Effects */
+.animate-text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400;
+  background-size: 200% auto;
+  animation: text-gradient 8s linear infinite;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(30, 58, 138, 0.7);
+/* Link Styles */
+.link-underline {
+  border-bottom-width: 0;
+  background-image: linear-gradient(transparent, transparent), linear-gradient(#fff, #fff);
+  background-size: 0 3px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size .3s ease-in-out;
 }
 
-/* Custom scrollbar for code blocks */
+.link-underline-blue {
+  background-image: linear-gradient(transparent, transparent), 
+    linear-gradient(rgb(59, 130, 246), rgb(59, 130, 246));
+}
+
+.link-underline:hover {
+  background-size: 100% 3px;
+  background-position: 0 100%;
+}
+
+/* Heading Styles */
+h2:target {
+  scroll-margin-top: 2rem;
+  animation: highlight 1.5s ease-out;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px -5px rgba(30, 58, 138, 0.2);
+}
+
+/* Scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar Styles */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Code block scrollbar */
 .code-scroll::-webkit-scrollbar {
   height: 6px;
 }
@@ -70,235 +135,241 @@
   background: rgba(30, 58, 138, 0.5);
 }
 
-/* Glass effect */
-.glass-effect {
-  @apply backdrop-blur-[var(--card-blur)] bg-[#0a1120]/40 border border-blue-900/30;
+/* MDX Content Styles */
+.mdx-content {
+  @apply prose prose-invert prose-lg max-w-none;
 }
 
-/* Fancy link underline animation */
-.fancy-link {
-  @apply relative text-gray-300 hover:text-blue-400 transition-colors duration-300;
+.mdx-content h2 {
+  @apply text-2xl font-bold mt-12 mb-6 animate-text-gradient;
 }
 
-.fancy-link::after {
-  content: '';
-  @apply absolute left-0 -bottom-0.5 w-0 h-0.5 bg-blue-400 transition-all duration-300;
+.mdx-content h3 {
+  @apply text-xl font-bold mt-8 mb-4;
 }
 
-.fancy-link:hover::after {
-  @apply w-full;
+.mdx-content pre {
+  @apply !bg-[#0a1120]/60 !p-0 backdrop-blur-sm border border-blue-900/30 rounded-xl overflow-hidden;
 }
 
-/* Card hover effect */
-.card-hover {
-  @apply transition-all duration-300;
-  transform-style: preserve-3d;
-  perspective: 1000px;
+.mdx-content pre > code {
+  @apply block p-4 overflow-x-auto code-scroll;
+  counter-reset: line;
 }
 
-.card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 30px -5px rgba(30, 58, 138, 0.2);
+.mdx-content pre > code > .line {
+  @apply px-4 py-0.5 border-l-2 border-transparent;
 }
 
-/* Text gradient animation */
-.animate-text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400;
-  background-size: 200% auto;
-  animation: text-gradient 8s linear infinite;
+.mdx-content pre > code > .line.highlighted {
+  @apply border-blue-500 bg-blue-500/10;
 }
 
-@keyframes text-gradient {
-  0% {
-    background-position: 0% center;
-  }
-  50% {
-    background-position: 100% center;
-  }
-  100% {
-    background-position: 0% center;
-  }
+.mdx-content pre > code > .line::before {
+  counter-increment: line;
+  content: counter(line);
+  @apply inline-block w-4 mr-4 text-gray-500 text-right;
 }
 
-/* Glow effect */
-.glow {
-  box-shadow: 0 0 20px rgba(30, 58, 138, 0.1);
+.mdx-content p {
+  @apply mb-6 text-gray-300 leading-relaxed hover:text-gray-200 transition-colors;
 }
 
-.glow:hover {
-  box-shadow: 0 0 30px rgba(30, 58, 138, 0.2);
+.mdx-content a {
+  @apply text-blue-400 hover:text-blue-300 transition-colors link-underline link-underline-blue;
 }
 
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  5% {
-    opacity: 1;
-  }
-  95% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
+/* Lists - Base Styles */
+.mdx-content ul,
+.mdx-content ol {
+  @apply list-none space-y-2 mb-6;
 }
 
-.animate-shimmer {
-  position: relative;
-  overflow: hidden;
-  background: #1e3a8a1a;  /* Very subtle blue background */
-  backdrop-filter: blur(8px);
+.mdx-content ul > li,
+.mdx-content ol > li {
+  @apply relative pl-6 hover:text-gray-200 transition-colors;
 }
 
-.animate-shimmer::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(59, 130, 246, 0.03) 20%,
-    rgba(59, 130, 246, 0.07) 60%,
-    rgba(59, 130, 246, 0.03) 80%,
-    transparent 100%
-  );
-  animation: shimmer 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  will-change: transform, opacity;
+/* Unordered Lists */
+.mdx-content ul > li::before {
+  content: "";
+  @apply absolute left-0 top-[0.6em] w-2 h-2 bg-blue-500/50 rounded-full 
+    transition-all duration-200;
 }
 
-/* Shimmer effect for loading states */
-.shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(30, 58, 138, 0) 0%,
-    rgba(59, 130, 246, 0.08) 20%,
-    rgba(96, 165, 250, 0.2) 60%,
-    rgba(59, 130, 246, 0.08) 80%,
-    rgba(30, 58, 138, 0) 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite ease-in-out;
-  pointer-events: none;
-  mix-blend-mode: plus-lighter;
+.mdx-content ul > li li::before {
+  @apply w-1.5 h-1.5 bg-blue-500/40;
 }
 
-/* Code block styles */
-.code-block {
-  position: relative;
-  margin: 2rem 0;
+.mdx-content ul > li li li::before {
+  @apply w-1 h-1 bg-blue-500/30;
 }
 
-.code-block pre {
-  margin: 0;
-  padding: 1rem;
-  overflow-x: auto;
+.mdx-content ul > li:hover::before {
+  @apply bg-blue-400/70 scale-110 shadow-glow;
 }
 
-.code-block code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: 0.875rem;
-  line-height: 1.5;
+/* Ordered Lists */
+.mdx-content ol {
+  counter-reset: item;
 }
 
-/* Line highlight effect */
-.highlight-line {
-  background-color: rgba(30, 58, 138, 0.1);
-  border-left: 2px solid rgba(59, 130, 246, 0.5);
+.mdx-content ol > li {
+  counter-increment: item;
 }
 
-/* Fade In Up with Pulse Animation */
-@keyframes fadeInUpWithPulse {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scale(0.9);
-  }
-  70% {
-    opacity: 1;
-    transform: translateY(0) scale(1.1);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.mdx-content ol > li::before {
+  content: counter(item) ".";
+  @apply absolute left-0 top-0 text-blue-400 font-medium transition-colors;
 }
 
-.animate-fade-in-up {
-  animation: fadeInUpWithPulse 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  opacity: 0;
+/* Nested Ordered Lists */
+.mdx-content ol ol {
+  @apply mt-2 mb-0 ml-4;
+  counter-reset: subitem;
 }
 
-.animate-delay-1 { animation-delay: 0.2s; }
-.animate-delay-2 { animation-delay: 0.3s; }
-.animate-delay-3 { animation-delay: 0.4s; }
-.animate-delay-4 { animation-delay: 0.5s; }
-
-/* Tooltip Fade In Animation */
-@keyframes tooltipFadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -8px);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, 0);
-  }
+.mdx-content ol ol > li {
+  counter-increment: subitem;
 }
 
-.tooltip-fade-in {
-  animation: tooltipFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.mdx-content ol ol > li::before {
+  content: counter(item) "." counter(subitem);
+  @apply text-sm text-blue-400/80;
 }
 
-/* Add a new animation for the icon hover */
-@keyframes iconHover {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.12); }
-  100% { transform: scale(1.1); }
+.mdx-content ol ol ol {
+  counter-reset: subsubitem;
 }
 
-.icon-hover {
-  animation: iconHover 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+.mdx-content ol ol ol > li {
+  counter-increment: subsubitem;
 }
 
-/* Soft Pulse Animation */
-@keyframes softPulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.02);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
+.mdx-content ol ol ol > li::before {
+  content: counter(item) "." counter(subitem) "." counter(subsubitem);
+  @apply text-xs text-blue-400/60;
 }
 
-.animate-soft-pulse {
-  animation: softPulse 2s ease-in-out infinite;
+/* Nested Unordered Lists */
+.mdx-content ul ul {
+  @apply mt-2 mb-0 ml-4;
 }
 
-/* Ring Pulse Animation */
-@keyframes ringPulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.1);
-  }
-  70% {
-    box-shadow: 0 0 0 6px rgba(59, 130, 246, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
-  }
+.mdx-content ul ul > li::before {
+  @apply w-1.5 h-1.5 bg-blue-500/40;
 }
 
-.ring-pulse {
-  animation: ringPulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+.mdx-content ul ul ul > li::before {
+  @apply w-1 h-1 top-[0.8em] bg-blue-500/30;
+}
+
+.mdx-content ol ol > li::before {
+  @apply text-sm text-blue-400/80;
+}
+
+.mdx-content ol ol ol > li::before {
+  @apply text-xs text-blue-400/60;
+}
+
+/* List item spacing */
+.mdx-content ul > li,
+.mdx-content ol > li {
+  @apply leading-relaxed;
+}
+
+.mdx-content ul ul > li,
+.mdx-content ol ol > li {
+  @apply pl-5;
+}
+
+.mdx-content ul ul ul > li,
+.mdx-content ol ol ol > li {
+  @apply pl-4;
+}
+
+/* Task Lists */
+.mdx-content .contains-task-list {
+  @apply list-none space-y-2 mb-6 ml-4;
+}
+
+.mdx-content .task-list-item {
+  @apply relative pl-8 hover:text-gray-200 transition-colors;
+}
+
+.mdx-content .task-list-item::before {
+  display: none;
+}
+
+.mdx-content .task-list-item input[type="checkbox"] {
+  @apply absolute left-0 top-[0.4em] appearance-none w-4 h-4 rounded 
+    border border-blue-500/50 bg-blue-900/20 checked:bg-blue-500/50
+    hover:border-blue-400/70 transition-all duration-200 cursor-pointer;
+}
+
+.mdx-content .task-list-item input[type="checkbox"]::after {
+  content: "✓";
+  @apply absolute inset-0 flex items-center justify-center text-transparent 
+    transition-colors checked:text-white;
+}
+
+/* Nested task lists */
+.mdx-content .contains-task-list .contains-task-list {
+  @apply ml-4 mt-2 mb-0;
+}
+
+.mdx-content .contains-task-list .contains-task-list .task-list-item {
+  @apply pl-7;
+}
+
+/* List Content Styles */
+.mdx-content li > p {
+  @apply mb-2;
+}
+
+.mdx-content li > pre {
+  @apply my-2;
+}
+
+.mdx-content li > code {
+  @apply mx-1;
+}
+/* Inline code */
+.mdx-content :not(pre) > code {
+  @apply bg-blue-900/20 px-1.5 py-0.5 rounded text-blue-200 border border-blue-900/50;
+}
+
+/* Code block header */
+.mdx-content .code-header {
+  @apply flex items-center justify-between px-4 py-2 bg-blue-900/40 border-b border-blue-900/50;
+}
+
+.mdx-content .code-header .language-tag {
+  @apply text-sm text-blue-300 font-mono;
+}
+
+.mdx-content .code-header .copy-button {
+  @apply p-1 rounded-md hover:bg-blue-900/50 transition-colors;
+}
+
+/* Blockquotes */
+.mdx-content blockquote {
+  @apply border-l-4 border-blue-500/50 bg-blue-900/20 px-4 py-2 my-6 rounded-r-lg;
+}
+
+.mdx-content blockquote p {
+  @apply mb-0;
+}
+
+/* Tables */
+.mdx-content table {
+  @apply w-full border-collapse my-6;
+}
+
+.mdx-content th {
+  @apply bg-blue-900/30 border border-blue-900/30 px-4 py-2;
+}
+
+.mdx-content td {
+  @apply border border-blue-900/20 px-4 py-2;
 }

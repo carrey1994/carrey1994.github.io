@@ -12,104 +12,130 @@ interface TableOfContentsProps {
   content: string;
 }
 
+// Helper function to create slug from text (keep in sync with ClientArticlePage)
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, '') // Remove invalid chars
+    .replace(/\s+/g, '-') // Replace spaces with -
+    .replace(/-+/g, '-') // Replace multiple - with single -
+    .trim();
+}
+
 export default function TableOfContents({ content }: TableOfContentsProps) {
   const [headings, setHeadings] = useState<Heading[]>([])
   const [activeId, setActiveId] = useState<string>('')
 
   useEffect(() => {
-    // Parse headings from content
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, 'text/html');
-    
-    // Get all h2 and h3 elements
-    const elements = Array.from(doc.querySelectorAll('h2, h3'))
-      .map((element, index) => ({
-        id: `heading-${index}`,
-        text: element.textContent || '',
-        level: parseInt(element.tagName[1]),
-        element
-      }));
+    // Parse headings from markdown content
+    const lines = content.split('\n');
+    const headings = lines
+      .filter(line => line.trim().startsWith('##')) // Get lines that start with ## (h2)
+      .map(line => {
+        const text = line.replace(/^##\s+/, '').trim(); // Remove ## and trim
+        return {
+          id: slugify(text),
+          text,
+          level: 2, // We're only using h2 for now
+        };
+      });
+
+    setHeadings(headings);
 
     // Wait for the content to be rendered in the DOM
     setTimeout(() => {
       // Get the actual elements from the rendered content
-      const renderedElements = Array.from(document.querySelectorAll('h2, h3'))
-        .map((element, index) => {
-          const id = `heading-${index}`;
-          if (!element.id) {
-            element.id = id;
-          }
-          return {
-            id,
-            text: element.textContent || '',
-            level: parseInt(element.tagName[1]),
-            element
-          };
-        });
-
-      setHeadings(renderedElements);
-
+      const headingElements = document.querySelectorAll('h2[id]');
+      
       // Intersection Observer for active heading
       const observer = new IntersectionObserver(
         (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              setActiveId(entry.target.id)
-            }
-          })
+          // Get all intersecting entries
+          const intersectingEntries = entries.filter(entry => entry.isIntersecting);
+          
+          // If there are intersecting entries, use the first one
+          if (intersectingEntries.length > 0) {
+            setActiveId(intersectingEntries[0].target.id);
+          }
         },
-        { rootMargin: '-20% 0px -80% 0px' }
-      )
+        { 
+          rootMargin: '-64px 0px -66% 0px',
+          threshold: [0, 1]
+        }
+      );
 
-      renderedElements.forEach(({ element }) => observer.observe(element))
+      headingElements.forEach(element => observer.observe(element));
 
-      return () => observer.disconnect()
+      return () => observer.disconnect();
     }, 100);
-  }, [content])
+  }, [content]);
 
   const scrollToHeading = (id: string) => {
-    const element = document.getElementById(id)
+    const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+      // Update URL hash without scrolling
+      history.pushState(null, '', `#${id}`);
+      
+      // Smooth scroll with offset
+      const offset = 96; // Adjust based on your header height + some padding
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
     }
   }
 
-  if (headings.length === 0) return null
+  if (headings.length === 0) return null;
 
   return (
-    <nav className="glass-effect rounded-xl p-6 sticky top-24">
-      <h3 className="text-lg font-semibold mb-4 animate-text-gradient">
+    <nav className="glass-effect rounded-xl p-6 sticky top-24 transition-all duration-300 group/toc">
+      <h3 className="text-lg font-bold mb-4 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
         Table of Contents
       </h3>
-      <ul className="space-y-3">
-        {headings.map((heading) => (
-          <li 
-            key={heading.id}
-            style={{
-              paddingLeft: heading.level === 3 ? '1rem' : '0'
-            }}
-          >
-            <button
-              onClick={() => scrollToHeading(heading.id)}
-              className={`text-left w-full group transition-all duration-300 ${
-                activeId === heading.id
-                  ? 'text-blue-400'
-                  : 'text-gray-400 hover:text-gray-200'
-              }`}
+      <div className="overflow-hidden transition-[height] duration-300">
+        <ul className="space-y-3 max-h-[calc(100vh-12rem)] overflow-y-auto pr-2
+          scrollbar-thin scrollbar-thumb-blue-600/20 scrollbar-track-blue-900/10
+          group-hover/toc:scrollbar-thumb-blue-500/30 
+          group-active/toc:scrollbar-thumb-blue-400/40
+          scrollbar-thumb-rounded-full scrollbar-track-rounded-full
+          transition-colors duration-300"
+        >
+          {headings.map((heading) => (
+            <li 
+              key={heading.id}
+              style={{
+                paddingLeft: heading.level === 3 ? '1rem' : '0'
+              }}
             >
-              <span className="inline-block w-full px-4 py-1 rounded-lg group-hover:bg-blue-900/20 transition-colors duration-300">
-                {heading.text}
-                <span className="absolute left-0 w-1 rounded-full transition-all duration-300 bg-blue-500/50 opacity-0 group-hover:opacity-100" 
-                      style={{ 
-                        height: activeId === heading.id ? '1.75rem' : '0.75rem',
-                        transform: `translateY(${activeId === heading.id ? '0.25rem' : '0.5rem'})`
-                      }}
-                />
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
+              <button
+                onClick={() => scrollToHeading(heading.id)}
+                className={`text-left w-full group transition-all duration-300 ${
+                  activeId === heading.id
+                    ? 'text-blue-300'
+                    : 'text-gray-400 hover:text-gray-200'
+                }`}
+              >
+                <span className="inline-block w-full px-4 py-1.5 rounded-lg group-hover:bg-blue-900/20 transition-colors duration-300 relative">
+                  {heading.text}
+                  <span 
+                    className={`absolute left-0.5 top-1/2 w-1.5 h-1.5 rounded-full transition-all duration-300 
+                      ${activeId === heading.id 
+                        ? 'opacity-100 bg-blue-400/70 shadow-glow-lg animate-glow-pulse scale-110' 
+                        : 'opacity-0 bg-blue-400/50 group-hover:opacity-100 scale-90'
+                      }`}
+                    style={{ 
+                      transform: 'translateY(-50%)'
+                    }}
+                  />
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </nav>
   )
 }

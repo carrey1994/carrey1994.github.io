@@ -13,26 +13,29 @@ function transformArticle(apiArticle: any): Article {
     published: apiArticle.published ?? true,
     coverImage: apiArticle.coverImage || null,
     updatedAt: apiArticle.updatedAt ? new Date(apiArticle.updatedAt) : undefined,
-    comments: apiArticle.comments || []
+    comments: apiArticle.comments || [],
   };
 }
 
-export async function fetchArticles(page: number = 1, limit: number = 5): Promise<ArticleListResponse> {
+export async function fetchArticles(
+  page: number = 1,
+  limit: number = 5
+): Promise<ArticleListResponse> {
   try {
     const response = await fetch(`${API_BASE_URL}/articles?page=${page}&limit=${limit}`);
-    
+
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch articles');
     }
-    
+
     const data = await response.json();
 
     return {
       articles: (data.articles || []).map(transformArticle),
       total: data.meta.total || 0,
       page: data.meta.page || page,
-      limit: data.meta.limit || limit
+      limit: data.meta.limit || limit,
     };
   } catch (error) {
     console.error('Error fetching articles:', error);
@@ -42,7 +45,7 @@ export async function fetchArticles(page: number = 1, limit: number = 5): Promis
 
 export async function fetchArticleById(id: string): Promise<Article> {
   const response = await fetch(`${API_BASE_URL}/articles/id/${id}`);
-  
+
   if (!response.ok) {
     const errorData = await response.json();
     if (response.status === 404) {
@@ -53,27 +56,33 @@ export async function fetchArticleById(id: string): Promise<Article> {
     }
     throw new Error(errorData.error || 'Failed to fetch article');
   }
-  
+
   const data = await response.json();
   return transformArticle(data);
 }
 
-export async function fetchArticlesByTag(tag: string, page: number = 1, limit: number = 5): Promise<ArticleListResponse> {
+export async function fetchArticlesByTag(
+  tag: string,
+  page: number = 1,
+  limit: number = 5
+): Promise<ArticleListResponse> {
   try {
-    const response = await fetch(`${API_BASE_URL}/articles?tag=${tag}&page=${page}&limit=${limit}`);
-    
+    const response = await fetch(
+      `${API_BASE_URL}/api/articles?tag=${tag}&page=${page}&limit=${limit}`
+    );
+
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch articles');
     }
-    
+
     const data = await response.json();
 
     return {
       articles: (data.articles || []).map(transformArticle),
       total: data.meta.total || 0,
       page: data.meta.page || page,
-      limit: data.meta.limit || limit
+      limit: data.meta.limit || limit,
     };
   } catch (error) {
     console.error('Error fetching articles by tag:', error);
@@ -84,12 +93,12 @@ export async function fetchArticlesByTag(tag: string, page: number = 1, limit: n
 export async function fetchTags(): Promise<Tag[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/tags`);
-    
+
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch tags');
     }
-    
+
     const data = await response.json();
     return data.tags || [];
   } catch (error) {
@@ -101,12 +110,12 @@ export async function fetchTags(): Promise<Tag[]> {
 export async function fetchRelatedArticles(id: string): Promise<Article[]> {
   try {
     const response = await fetch(`${API_BASE_URL}/articles/id/${id}/related`);
-    
+
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.error || 'Failed to fetch related articles');
     }
-    
+
     const data = await response.json();
     return data.map(transformArticle);
   } catch (error) {

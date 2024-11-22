@@ -42,20 +42,8 @@ export default function MDXContent({ content }: MDXContentProps) {
           console.warn('Content is empty or undefined');
           return;
         }
-
-        // Clean up the content by removing the outer <pre><code> tags and decoding HTML entities
-        let cleanContent = content
-          .replace(/<\/?pre>/g, '')
-          .replace(/<\/?code>/g, '')
-          .replace(/&quot;/g, '"')
-          .replace(/&#39;/g, "'")
-          .replace(/&lt;/g, '<')
-          .replace(/&gt;/g, '>')
-          .replace(/&amp;/g, '&');
         
-        console.log('Cleaned content:', cleanContent);
-        
-        const mdx = await serialize(cleanContent, {
+        const mdx = await serialize(content, {
           mdxOptions: {
             rehypePlugins: [
               [rehypePrettyCode, options],
@@ -71,10 +59,6 @@ export default function MDXContent({ content }: MDXContentProps) {
 
     prepareMDX()
   }, [content])
-
-  useEffect(() => {
-    console.log('MDX source state updated:', mdxSource);
-  }, [mdxSource]);
 
   const handleCopy = async (code: string) => {
     try {

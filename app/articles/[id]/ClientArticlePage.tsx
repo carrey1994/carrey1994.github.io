@@ -7,7 +7,7 @@ import TableOfContents from '@/app/components/TableOfContents'
 import EstimatedReadTime from '@/app/components/EstimatedReadTime'
 import ShareButtons from '@/app/components/ShareButtons'
 import FadeIn from '@/app/components/FadeIn'
-import CodeBlock from '@/app/components/CodeBlock'
+import MDXContent from '@/app/components/MDXContent'
 import { Article } from '@/app/types'
 
 interface ClientArticlePageProps {
@@ -16,151 +16,36 @@ interface ClientArticlePageProps {
   relatedArticles: Article[]
 }
 
+// Helper function to create slug from text
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, '') // Remove invalid chars
+    .replace(/\s+/g, '-') // Replace spaces with -
+    .replace(/-+/g, '-') // Replace multiple - with single -
+    .trim(); // Trim whitespace
+}
+
 export default function ClientArticlePage({ article, formattedContent, relatedArticles }: ClientArticlePageProps) {
   const [mounted, setMounted] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     setMounted(true)
-    // Simulate loading delay
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 1500)
-    return () => clearTimeout(timer)
   }, [])
 
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 pt-8">
-        {/* Main Content */}
-        <div className="lg:col-span-3 space-y-8">
-          <article className="glass-effect rounded-xl p-8 relative overflow-hidden">
-            <header className="mb-12 relative">
-              {/* Title shimmer */}
-              <div className="space-y-3 mb-6">
-                <div className="h-10 bg-blue-900/30 rounded-lg relative overflow-hidden w-3/4">
-                  <div className="absolute inset-0 shimmer" />
-                </div>
-                <div className="h-10 bg-blue-900/30 rounded-lg relative overflow-hidden w-1/2">
-                  <div className="absolute inset-0 shimmer" />
-                </div>
-              </div>
+  // Combine all text content for table of contents
+  const textContent = formattedContent
+    .filter(block => block.type === 'text')
+    .map(block => block.content)
+    .join('\n\n');
 
-              {/* Tags shimmer */}
-              <div className="flex flex-wrap gap-2 mb-6">
-                {[1, 2, 3].map((i) => (
-                  <div 
-                    key={i}
-                    className="h-7 w-24 bg-blue-900/30 rounded-full relative overflow-hidden"
-                  >
-                    <div className="absolute inset-0 shimmer" />
-                  </div>
-                ))}
-                <div className="h-7 w-32 bg-blue-900/30 rounded-lg relative overflow-hidden ml-4">
-                  <div className="absolute inset-0 shimmer" />
-                </div>
-              </div>
-
-              {/* Date and share buttons shimmer */}
-              <div className="flex items-center justify-between">
-                <div className="h-5 w-40 bg-blue-900/30 rounded relative overflow-hidden">
-                  <div className="absolute inset-0 shimmer" />
-                </div>
-                <div className="flex gap-2">
-                  {[1, 2, 3].map((i) => (
-                    <div 
-                      key={i}
-                      className="h-8 w-8 bg-blue-900/30 rounded-full relative overflow-hidden"
-                    >
-                      <div className="absolute inset-0 shimmer" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="absolute -bottom-6 left-0 w-24 h-1 bg-gradient-to-r from-blue-500/50 to-cyan-500/50 rounded-full" />
-            </header>
-
-            {/* Content shimmer */}
-            <div className="space-y-8">
-              {/* Paragraphs */}
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="space-y-3">
-                  {[...Array(3)].map((_, j) => (
-                    <div 
-                      key={j}
-                      className="h-6 bg-blue-900/30 rounded relative overflow-hidden"
-                      style={{ width: `${Math.random() * 20 + 80}%` }}
-                    >
-                      <div className="absolute inset-0 shimmer" />
-                    </div>
-                  ))}
-                </div>
-              ))}
-
-              {/* Code block */}
-              <div className="rounded-xl overflow-hidden">
-                <div className="h-8 bg-blue-900/40 px-4 flex items-center">
-                  <div className="h-4 w-24 bg-blue-900/30 rounded relative overflow-hidden">
-                    <div className="absolute inset-0 shimmer" />
-                  </div>
-                </div>
-                <div className="bg-blue-900/30 p-4">
-                  {[...Array(6)].map((_, i) => (
-                    <div 
-                      key={i}
-                      className="h-5 bg-blue-900/40 rounded my-2 relative overflow-hidden"
-                      style={{ width: `${Math.random() * 40 + 60}%` }}
-                    >
-                      <div className="absolute inset-0 shimmer" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* More paragraphs */}
-              {[...Array(2)].map((_, i) => (
-                <div key={i} className="space-y-3">
-                  {[...Array(3)].map((_, j) => (
-                    <div 
-                      key={j}
-                      className="h-6 bg-blue-900/30 rounded relative overflow-hidden"
-                      style={{ width: `${Math.random() * 20 + 80}%` }}
-                    >
-                      <div className="absolute inset-0 shimmer" />
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </article>
-        </div>
-
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <div className="glass-effect rounded-xl p-6 sticky top-8">
-            <div className="h-8 w-40 bg-blue-900/30 rounded mb-6 relative overflow-hidden">
-              <div className="absolute inset-0 shimmer" />
-            </div>
-            <div className="space-y-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-blue-900/30 relative overflow-hidden">
-                    <div className="absolute inset-0 shimmer" />
-                  </div>
-                  <div 
-                    className="h-6 bg-blue-900/30 rounded relative overflow-hidden flex-1"
-                  >
-                    <div className="absolute inset-0 shimmer" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // Reconstruct markdown content from formatted blocks
+  const markdownContent = formattedContent.map(block => {
+    if (block.type === 'code') {
+      return `\`\`\`${block.language || ''}\n${block.content}\n\`\`\``;
+    }
+    return block.content;
+  }).join('\n\n');
 
   return (
     <>
@@ -200,34 +85,7 @@ export default function ClientArticlePage({ article, formattedContent, relatedAr
                 <div className="absolute -bottom-6 left-0 w-24 h-1 bg-gradient-to-r from-blue-500/50 to-cyan-500/50 rounded-full" />
               </header>
 
-              <div className="prose prose-invert prose-lg max-w-none relative space-y-6">
-                {formattedContent.map((block, index) => {
-                  if (block.type === 'code') {
-                    return (
-                      <CodeBlock 
-                        key={index}
-                        code={block.content}
-                        language={block.language}
-                      />
-                    )
-                  }
-
-                  if (block.content.trim().startsWith('##')) {
-                    return (
-                      <h2 key={index} className="text-2xl font-bold mt-12 mb-6 animate-text-gradient relative group/heading">
-                        {block.content.replace('##', '').trim()}
-                        <div className="absolute -left-4 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-blue-500/50 opacity-0 group-hover/heading:opacity-100 transition-opacity" />
-                      </h2>
-                    )
-                  }
-
-                  return (
-                    <p key={index} className="mb-6 text-gray-300 leading-relaxed hover:text-gray-200 transition-colors">
-                      {block.content.trim()}
-                    </p>
-                  )
-                })}
-              </div>
+              <MDXContent content={markdownContent} />
             </article>
           </FadeIn>
 
@@ -299,7 +157,7 @@ export default function ClientArticlePage({ article, formattedContent, relatedAr
         {/* Sidebar */}
         <div className="lg:col-span-1">
           <FadeIn delay={300}>
-            {mounted && <TableOfContents />}
+            {mounted && <TableOfContents content={textContent} />}
           </FadeIn>
         </div>
       </div>

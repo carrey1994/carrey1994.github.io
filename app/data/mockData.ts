@@ -42,30 +42,28 @@ const additionalArticles: Article[] = Array.from({ length: 25 }, (_, index) => {
     id,
     title: `${topics[topicIndex].title} - Part ${partNumber}`,
     excerpt: `Learn about ${topics[topicIndex].title.toLowerCase()} and best practices. Part ${partNumber} of our comprehensive guide.`,
-    content: `
-      This is a detailed article about ${topics[topicIndex].title}.
+    content: `This is a detailed article about ${topics[topicIndex].title}.
 
-      ## Introduction
-      Understanding ${topics[topicIndex].title} is essential for modern development.
+## Introduction
+Understanding ${topics[topicIndex].title} is essential for modern development.
 
-      ## Key Concepts
-      Let's explore the main concepts and best practices.
+## Key Concepts
+Let's explore the main concepts and best practices.
 
-      \`\`\`typescript
-      // Example code for ${topics[topicIndex].title}
-      function example() {
-        console.log("Detailed implementation here");
-      }
-      \`\`\`
+\`\`\`typescript
+// Example code for ${topics[topicIndex].title}
+function example() {
+  console.log("Detailed implementation here");
+}
+\`\`\`
 
-      ## Best Practices
-      1. Follow established patterns
-      2. Write clean code
-      3. Test thoroughly
+## Best Practices
+1. Follow established patterns
+2. Write clean code
+3. Test thoroughly
 
-      ## Conclusion
-      Keep learning and practicing these concepts.
-    `,
+## Conclusion
+Keep learning and practicing these concepts.`,
     tags: [
       { id: `${10 + topicIndex + 1}`, name: topics[topicIndex].tag },
       { id: `${20 + index % 5}`, name: ['frontend', 'backend', 'devops', 'database', 'cloud'][index % 5] }
@@ -81,51 +79,50 @@ const baseArticles: Article[] = [
     id: '1',
     title: 'Understanding Data Structures',
     excerpt: 'An introduction to fundamental data structures in programming and their practical applications in solving real-world problems.',
-    content: `
-      Data structures are fundamental building blocks in computer programming that help us organize and manage data efficiently. In this comprehensive guide, we'll explore various data structures and their practical applications.
+    content: `Data structures are fundamental building blocks in computer programming that help us organize and manage data efficiently. In this comprehensive guide, we'll explore various data structures and their practical applications.
 
-      ## Arrays and Lists
-      Arrays are the simplest and most widely used data structures...
-      \`\`\`typescript
-      const numbers: number[] = [1, 2, 3, 4, 5];
-      console.log(numbers[0]); // Access first element: 1
-      numbers.push(6); // Add element to end: [1, 2, 3, 4, 5, 6]
-      \`\`\`
+## Arrays and Lists
+Arrays are the simplest and most widely used data structures...
+\`\`\`typescript
+const numbers: number[] = [1, 2, 3, 4, 5];
+console.log(numbers[0]); // Access first element: 1
+numbers.push(6); // Add element to end: [1, 2, 3, 4, 5, 6]
+\`\`\`
 
-      Lists, particularly linked lists, offer more flexibility than arrays. They can grow and shrink dynamically, making them ideal for situations where the size of your data structure needs to change frequently.
+Lists, particularly linked lists, offer more flexibility than arrays. They can grow and shrink dynamically, making them ideal for situations where the size of your data structure needs to change frequently.
 
-      ## Trees and Binary Search Trees
-      Trees are hierarchical data structures with a root node and child nodes. They're commonly used in file systems, databases, and many algorithms. Binary search trees, in particular, are excellent for maintaining sorted data and performing quick searches.
+## Trees and Binary Search Trees
+Trees are hierarchical data structures with a root node and child nodes. They're commonly used in file systems, databases, and many algorithms. Binary search trees, in particular, are excellent for maintaining sorted data and performing quick searches.
 
-      Here's an example of a binary search tree implementation:
-      \`\`\`typescript
-      class TreeNode {
-        value: number;
-        left: TreeNode | null;
-        right: TreeNode | null;
+Here's an example of a binary search tree implementation:
+\`\`\`typescript
+class TreeNode {
+  value: number;
+  left: TreeNode | null;
+  right: TreeNode | null;
 
-        constructor(value: number) {
-          this.value = value;
-          this.left = null;
-          this.right = null;
-        }
-      }
+  constructor(value: number) {
+    this.value = value;
+    this.left = null;
+    this.right = null;
+  }
+}
 
-      class BinarySearchTree {
-        root: TreeNode | null = null;
+class BinarySearchTree {
+  root: TreeNode | null = null;
 
-        insert(value: number) {
-          const newNode = new TreeNode(value);
-          if (!this.root) {
-            this.root = newNode;
-            return;
-          }
-          // Insert logic here
-        }
-      }
-      \`\`\`
+  insert(value: number) {
+    const newNode = new TreeNode(value);
+    if (!this.root) {
+      this.root = newNode;
+      return;
+    }
+    // Insert logic here
+  }
+}
+\`\`\`
 
-      ## Hash Tables
+## Hash Tables
       Hash tables provide extremely fast insertion and lookup operations. They work by mapping keys to array indices using a hash function. This makes them perfect for implementing dictionaries, caches, and symbol tables in compilers.
 
       Example of using a Map in TypeScript (which is similar to a hash table):
@@ -698,28 +695,26 @@ const moreArticles: Article[] = Array.from({ length: 20 }, (_, index) => {
     id,
     title: `${topics[topicIndex].title} - Part ${partNumber}`,
     excerpt: `Exploring ${topics[topicIndex].title.toLowerCase()} concepts and implementation details. Part ${partNumber}.`,
-    content: `
-      Quick guide about ${topics[topicIndex].title}.
+    content: `Quick guide about ${topics[topicIndex].title}.
 
-      ## Overview
-      Basic introduction to ${topics[topicIndex].title}.
+## Overview
+Basic introduction to ${topics[topicIndex].title}.
 
-      ## Main Points
-      - Key concept 1
-      - Key concept 2
-      - Key concept 3
+## Main Points
+- Key concept 1
+- Key concept 2
+- Key concept 3
 
-      ## Example
-      \`\`\`typescript
-      // Basic example for ${topics[topicIndex].title}
-      function demo() {
-        console.log("${topics[topicIndex].title} implementation");
-      }
-      \`\`\`
+## Example
+\`\`\`typescript
+// Basic example for ${topics[topicIndex].title}
+function demo() {
+  console.log("${topics[topicIndex].title} implementation");
+}
+\`\`\`
 
-      ## Summary
-      Quick recap of ${topics[topicIndex].title} concepts.
-    `,
+## Summary
+Quick recap of ${topics[topicIndex].title} concepts.`,
     tags: [
       { id: `${30 + topicIndex + 1}`, name: topics[topicIndex].tag },
       { id: `${40 + index % 5}`, name: ['architecture', 'tools', 'languages', 'frameworks', 'infrastructure'][index % 5] }
