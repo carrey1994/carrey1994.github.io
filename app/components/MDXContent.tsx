@@ -37,20 +37,43 @@ export default function MDXContent({ content }: MDXContentProps) {
   useEffect(() => {
     const prepareMDX = async () => {
       try {
-        console.log('Preparing MDX for content:', content);
         if (!content) {
           console.warn('Content is empty or undefined');
           return;
         }
         
-        const mdx = await serialize(content, {
+        // Format content with proper spacing
+        const formattedContent = content
+          // Ensure proper list spacing
+          .split('\n')
+          .map(line => {
+            // Handle unordered lists
+            if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
+              return line.trimEnd();
+            }
+            // Handle ordered lists
+            if (/^\d+\.\s/.test(line.trim())) {
+              return line.trimEnd();
+            }
+            // Handle other content
+            return line.trim();
+          })
+          .join('\n')
+          // Fix extra newlines
+          .replace(/\n{3,}/g, '\n\n')
+          // Ensure space after list markers
+          .replace(/^-(?!\s)/gm, '- ')
+          .replace(/^\*(?!\s)/gm, '* ')
+          .replace(/^(\d+\.)(?!\s)/gm, '$1 ');
+        
+        const mdx = await serialize(formattedContent, {
           mdxOptions: {
             rehypePlugins: [
               [rehypePrettyCode, options],
             ],
+            format: 'mdx',
           },
         })
-        console.log('MDX serialization successful:', mdx);
         setMdxSource(mdx)
       } catch (error) {
         console.error('Error preparing MDX:', error)
@@ -62,6 +85,7 @@ export default function MDXContent({ content }: MDXContentProps) {
 
   const handleCopy = async (code: string) => {
     try {
+      // Remove line numbers before copying
       const cleanCode = code.replace(/^\d+\s+/gm, '')
       await navigator.clipboard.writeText(cleanCode)
       setCopiedCode(code)

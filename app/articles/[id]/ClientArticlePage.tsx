@@ -16,21 +16,24 @@ interface ClientArticlePageProps {
   relatedArticles: Article[]
 }
 
-// Helper function to create slug from text
-function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9 -]/g, '') // Remove invalid chars
-    .replace(/\s+/g, '-') // Replace spaces with -
-    .replace(/-+/g, '-') // Replace multiple - with single -
-    .trim(); // Trim whitespace
-}
 
 export default function ClientArticlePage({ article, formattedContent, relatedArticles }: ClientArticlePageProps) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    // Prevent scroll restoration
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+
     setMounted(true)
+
+    // Reset scroll position when component unmounts
+    return () => {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'auto';
+      }
+    }
   }, [])
 
   // Combine all text content for table of contents
@@ -124,7 +127,7 @@ export default function ClientArticlePage({ article, formattedContent, relatedAr
                   {relatedArticles.map((relatedArticle) => (
                     <Link 
                       key={relatedArticle.id}
-                      href={`/articles/${relatedArticle.slug}`}
+                      href={`/articles/${relatedArticle.id}`}
                       className="glass-effect rounded-xl p-6 group relative overflow-hidden hover:-translate-y-1 transition-all duration-300"
                     >
                       <div className="absolute inset-0 bg-gradient-to-br from-blue-900/5 to-cyan-900/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

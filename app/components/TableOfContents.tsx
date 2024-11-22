@@ -12,7 +12,7 @@ interface TableOfContentsProps {
   content: string;
 }
 
-// Helper function to create slug from text (keep in sync with ClientArticlePage)
+// Helper function to create slug from text
 function slugify(text: string): string {
   return text
     .toLowerCase()
@@ -25,6 +25,30 @@ function slugify(text: string): string {
 export default function TableOfContents({ content }: TableOfContentsProps) {
   const [headings, setHeadings] = useState<Heading[]>([])
   const [activeId, setActiveId] = useState<string>('')
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+
+    // Handle initial hash if present
+    const hash = window.location.hash.slice(1);
+    if (hash) {
+      setTimeout(() => {
+        const element = document.getElementById(hash);
+        if (element) {
+          const offset = 96;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'instant' // Use instant to prevent animation on page load
+          });
+          setActiveId(hash);
+        }
+      }, 100);
+    }
+  }, [])
 
   useEffect(() => {
     // Parse headings from markdown content
@@ -91,25 +115,21 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
   if (headings.length === 0) return null;
 
   return (
-    <nav className="glass-effect rounded-xl p-6 sticky top-24 transition-all duration-300 group/toc">
-      <h3 className="text-lg font-bold mb-4 bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">
+    <nav className={`glass-effect rounded-xl p-6 sticky top-24 transition-all duration-500 group/toc
+      ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+    >
+      <h3 className="text-lg font-bold mb-4 animate-text-gradient">
         Table of Contents
       </h3>
       <div className="overflow-hidden transition-[height] duration-300">
         <ul className="space-y-3 max-h-[calc(100vh-12rem)] overflow-y-auto pr-2
           scrollbar-thin scrollbar-thumb-blue-600/20 scrollbar-track-blue-900/10
           group-hover/toc:scrollbar-thumb-blue-500/30 
-          group-active/toc:scrollbar-thumb-blue-400/40
           scrollbar-thumb-rounded-full scrollbar-track-rounded-full
           transition-colors duration-300"
         >
           {headings.map((heading) => (
-            <li 
-              key={heading.id}
-              style={{
-                paddingLeft: heading.level === 3 ? '1rem' : '0'
-              }}
-            >
+            <li key={heading.id}>
               <button
                 onClick={() => scrollToHeading(heading.id)}
                 className={`text-left w-full group transition-all duration-300 ${

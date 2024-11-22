@@ -179,7 +179,7 @@ html {
   @apply text-blue-400 hover:text-blue-300 transition-colors link-underline link-underline-blue;
 }
 
-/* Lists - Base Styles */
+/* Lists */
 .mdx-content ul,
 .mdx-content ol {
   @apply list-none space-y-2 mb-6;
@@ -187,105 +187,28 @@ html {
 
 .mdx-content ul > li,
 .mdx-content ol > li {
-  @apply relative pl-6 hover:text-gray-200 transition-colors;
+  @apply relative hover:text-gray-200 transition-colors;
 }
 
-/* Unordered Lists */
-.mdx-content ul > li::before {
-  content: "";
-  @apply absolute left-0 top-[0.6em] w-2 h-2 bg-blue-500/50 rounded-full 
-    transition-all duration-200;
+/* Nested lists */
+.mdx-content ul ul,
+.mdx-content ol ol,
+.mdx-content ul ol,
+.mdx-content ol ul {
+  @apply mt-2 mb-0;
 }
 
-.mdx-content ul > li li::before {
-  @apply w-1.5 h-1.5 bg-blue-500/40;
+/* List item content */
+.mdx-content li > p {
+  @apply mb-2;
 }
 
-.mdx-content ul > li li li::before {
-  @apply w-1 h-1 bg-blue-500/30;
+.mdx-content li > pre {
+  @apply my-2;
 }
 
-.mdx-content ul > li:hover::before {
-  @apply bg-blue-400/70 scale-110 shadow-glow;
-}
-
-/* Ordered Lists */
-.mdx-content ol {
-  counter-reset: item;
-}
-
-.mdx-content ol > li {
-  counter-increment: item;
-}
-
-.mdx-content ol > li::before {
-  content: counter(item) ".";
-  @apply absolute left-0 top-0 text-blue-400 font-medium transition-colors;
-}
-
-/* Nested Ordered Lists */
-.mdx-content ol ol {
-  @apply mt-2 mb-0 ml-4;
-  counter-reset: subitem;
-}
-
-.mdx-content ol ol > li {
-  counter-increment: subitem;
-}
-
-.mdx-content ol ol > li::before {
-  content: counter(item) "." counter(subitem);
-  @apply text-sm text-blue-400/80;
-}
-
-.mdx-content ol ol ol {
-  counter-reset: subsubitem;
-}
-
-.mdx-content ol ol ol > li {
-  counter-increment: subsubitem;
-}
-
-.mdx-content ol ol ol > li::before {
-  content: counter(item) "." counter(subitem) "." counter(subsubitem);
-  @apply text-xs text-blue-400/60;
-}
-
-/* Nested Unordered Lists */
-.mdx-content ul ul {
-  @apply mt-2 mb-0 ml-4;
-}
-
-.mdx-content ul ul > li::before {
-  @apply w-1.5 h-1.5 bg-blue-500/40;
-}
-
-.mdx-content ul ul ul > li::before {
-  @apply w-1 h-1 top-[0.8em] bg-blue-500/30;
-}
-
-.mdx-content ol ol > li::before {
-  @apply text-sm text-blue-400/80;
-}
-
-.mdx-content ol ol ol > li::before {
-  @apply text-xs text-blue-400/60;
-}
-
-/* List item spacing */
-.mdx-content ul > li,
-.mdx-content ol > li {
-  @apply leading-relaxed;
-}
-
-.mdx-content ul ul > li,
-.mdx-content ol ol > li {
-  @apply pl-5;
-}
-
-.mdx-content ul ul ul > li,
-.mdx-content ol ol ol > li {
-  @apply pl-4;
+.mdx-content li > code {
+  @apply mx-1;
 }
 
 /* Task Lists */
@@ -334,6 +257,7 @@ html {
 .mdx-content li > code {
   @apply mx-1;
 }
+
 /* Inline code */
 .mdx-content :not(pre) > code {
   @apply bg-blue-900/20 px-1.5 py-0.5 rounded text-blue-200 border border-blue-900/50;

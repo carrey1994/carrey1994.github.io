@@ -2,28 +2,44 @@ import { notFound } from 'next/navigation';
 import { fetchArticleById, fetchRelatedArticles } from '@/app/utils/api';
 import ClientArticlePage from './ClientArticlePage';
 
+// Helper function to check if a line is a list item
+function isListItem(line: string): boolean {
+  return line.trim().startsWith('-') || 
+         line.trim().startsWith('*') || 
+         /^\d+\.\s/.test(line.trim());
+}
+
 // Helper function to format content
 function formatContent(content: string) {
-  // First, clean up the content by removing extra whitespace and indentation
-  const cleanContent = content
-    .split('\n')
-    .map(line => line.trim()) // Remove leading/trailing whitespace
-    .join('\n')
-    .trim(); // Remove leading/trailing newlines
-
   // Split content by code blocks
   const blocks = [];
-  const parts = cleanContent.split('```');
+  const parts = content.split('```');
 
   parts.forEach((part, index) => {
     if (index % 2 === 0) {
-      // Text content
-      if (part.trim()) {
-        blocks.push({
-          type: 'text',
-          content: part.trim()
-        });
-      }
+      // Text content - split by double newlines to separate blocks
+      const textBlocks = part.split('\n\n');
+      textBlocks.forEach(block => {
+        const lines = block.split('\n');
+        
+        // Check if this block is a list
+        if (lines.some(line => isListItem(line))) {
+          // Keep list items together as one block
+          blocks.push({
+            type: 'text',
+            content: lines.join('\n')
+          });
+        } else {
+          // Regular text block
+          const trimmedBlock = block.trim();
+          if (trimmedBlock) {
+            blocks.push({
+              type: 'text',
+              content: trimmedBlock
+            });
+          }
+        }
+      });
     } else {
       // Code block
       const lines = part.split('\n');
@@ -42,27 +58,18 @@ function formatContent(content: string) {
   return blocks;
 }
 
-export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
-  const resolvedParams = await params;
-  
+export default async function ArticlePage({ params }: { params: { id: string } }) {
   try {
     const [article, relatedArticles] = await Promise.all([
-      fetchArticleById(resolvedParams.id),
-      fetchRelatedArticles(resolvedParams.id)
+      fetchArticleById(params.id),
+      fetchRelatedArticles(params.id)
     ]);
 
     if (!article) {
-      console.error('Article not found:', resolvedParams.id);
-      return notFound();
-    }
-
-    if (!article.content) {
-      console.error('Article has no content:', resolvedParams.id);
       return notFound();
     }
 
     const formattedContent = formatContent(article.content);
-    console.log('Formatted content:', formattedContent);
 
     return (
       <ClientArticlePage 
@@ -72,10 +79,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       />
     );
   } catch (error) {
-    console.error('Error loading article:', resolvedParams.id, error);
-    if (error instanceof Error && error.message === 'Article not found') {
-      return notFound();
-    }
-    throw error;
+    console.error('Error loading article:', error);
+    return notFound();
   }
 }

@@ -144,21 +144,79 @@
   @apply border border-blue-500/10;
 }
 
-/* Lists */
-.mdx-content ul {
-  @apply list-disc pl-6 my-4 space-y-2;
-}
-
+/* Lists - Base Styles */
+.mdx-content ul,
 .mdx-content ol {
-  @apply list-decimal pl-6 my-4 space-y-2;
+  @apply list-outside pl-5 my-4 space-y-2;
 }
 
 .mdx-content li {
-  @apply text-gray-300;
+  @apply text-gray-300 hover:text-gray-200 transition-colors pl-1;
 }
 
-.mdx-content li::marker {
+/* Unordered Lists */
+.mdx-content ul {
+  @apply list-disc;
+}
+
+.mdx-content ul > li::marker {
   @apply text-blue-400;
+}
+
+/* Ordered Lists */
+.mdx-content ol {
+  @apply list-decimal;
+}
+
+.mdx-content ol > li::marker {
+  @apply text-blue-400;
+}
+
+/* Nested Lists */
+.mdx-content ul ul,
+.mdx-content ol ol,
+.mdx-content ul ol,
+.mdx-content ol ul {
+  @apply my-2 ml-4;
+}
+
+/* Nested Unordered Lists */
+.mdx-content ul ul > li::marker {
+  @apply text-blue-400/80;
+}
+
+.mdx-content ul ul ul > li::marker {
+  @apply text-blue-400/60;
+}
+
+/* Nested Ordered Lists */
+.mdx-content ol ol {
+  list-style-type: lower-alpha;
+}
+
+.mdx-content ol ol ol {
+  list-style-type: lower-roman;
+}
+
+.mdx-content ol ol > li::marker {
+  @apply text-blue-400/80;
+}
+
+.mdx-content ol ol ol > li::marker {
+  @apply text-blue-400/60;
+}
+
+/* List Item Content */
+.mdx-content li > p {
+  @apply mb-2;
+}
+
+.mdx-content li > pre {
+  @apply my-2;
+}
+
+.mdx-content li > code {
+  @apply mx-1;
 }
 
 /* Blockquotes */
