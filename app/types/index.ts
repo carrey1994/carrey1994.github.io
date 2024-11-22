@@ -1,6 +1,7 @@
 export interface Tag {
-  id: string;
   name: string;
+  articleCount: number;
+  lastActive: Date | null;
 }
 
 export interface Article {

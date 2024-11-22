@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { fetchTags } from '../utils/api'
+import { fetchTopicTags } from '../utils/api'
 import type { Tag } from '../types'
 import MouseFollowGradient from './MouseFollowGradient'
 
@@ -17,7 +17,7 @@ export default function TagList({ selectedTag, onTagSelect }: TagListProps) {
   useEffect(() => {
     const loadTags = async () => {
       try {
-        const fetchedTags = await fetchTags()
+        const fetchedTags = await fetchTopicTags()
         setTags(fetchedTags)
       } catch (error) {
         console.error('Failed to fetch tags:', error)
@@ -53,25 +53,27 @@ export default function TagList({ selectedTag, onTagSelect }: TagListProps) {
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => onTagSelect(null)}
-            className={`px-3 py-1 rounded-full text-sm transition-all duration-300 transform hover:-translate-y-0.5
+            className={`px-3 py-1 rounded-full text-sm transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2
               ${!selectedTag 
                 ? 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30' 
                 : 'bg-blue-900/20 text-blue-200 hover:bg-blue-800/40'
               }`}
           >
-            All
+            <span>All</span>
+            <span className="text-xs opacity-60">({tags.reduce((sum, tag) => sum + tag.articleCount, 0)})</span>
           </button>
           {tags.map((tag) => (
             <button
-              key={tag.id}
+              key={tag.name}
               onClick={() => onTagSelect(tag.name)}
-              className={`px-3 py-1 rounded-full text-sm transition-all duration-300 transform hover:-translate-y-0.5
+              className={`px-3 py-1 rounded-full text-sm transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2
                 ${selectedTag === tag.name
                   ? 'bg-blue-500/20 text-blue-300 hover:bg-blue-500/30'
                   : 'bg-blue-900/20 text-blue-200 hover:bg-blue-800/40'
                 }`}
             >
-              {tag.name}
+              <span>{tag.name}</span>
+              <span className="text-xs opacity-60">({tag.articleCount})</span>
             </button>
           ))}
         </div>

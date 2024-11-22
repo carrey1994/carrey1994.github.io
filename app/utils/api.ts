@@ -1,6 +1,6 @@
 import type { Article, ArticleListResponse, Tag } from '../types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 
 function transformArticle(apiArticle: any): Article {
   return {
@@ -121,5 +121,26 @@ export async function fetchRelatedArticles(id: string): Promise<Article[]> {
   } catch (error) {
     console.error('Error fetching related articles:', error);
     return [];
+  }
+}
+
+export async function fetchTopicTags(): Promise<Tag[]> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/tags/topics`);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to fetch topic tags');
+    }
+
+    const data = await response.json();
+    return data.map((tag: any) => ({
+      name: tag.name,
+      articleCount: tag.articleCount,
+      lastActive: tag.lastActive ? new Date(tag.lastActive) : null
+    }));
+  } catch (error) {
+    console.error('Error fetching topic tags:', error);
+    throw error;
   }
 }
