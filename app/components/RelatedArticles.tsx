@@ -9,6 +9,10 @@ interface RelatedArticlesProps {
 }
 
 export default function RelatedArticles({ currentArticle, articles }: RelatedArticlesProps) {
+  const handleClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Get articles with matching tags, excluding the current article
   const relatedArticles = articles
     .filter(article => 
@@ -30,6 +34,7 @@ export default function RelatedArticles({ currentArticle, articles }: RelatedArt
             key={article.id} 
             href={`/articles/${article.slug}`}
             className="glass-effect rounded-xl p-6 group relative overflow-hidden hover:-translate-y-1 transition-all duration-300"
+            onClick={handleClick}
           >
             {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-blue-900/5 to-cyan-900/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

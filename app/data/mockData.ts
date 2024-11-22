@@ -19,6 +19,218 @@ export const MOCK_PROFILE: Profile = {
   }
 }
 
+// Add 4 new algorithm articles to baseArticles
+const algorithmArticles: Article[] = [
+  {
+    id: '51',
+    title: 'Dynamic Programming Fundamentals',
+    excerpt: 'Master dynamic programming with step-by-step examples and practical problem-solving techniques.',
+    content: `
+      Dynamic Programming (DP) is a powerful algorithmic technique that solves complex problems by breaking them down into simpler subproblems.
+
+      ## Understanding Dynamic Programming
+      Let's explore fundamental concepts with practical examples:
+
+      \`\`\`typescript
+      // Fibonacci with DP
+      function fibonacci(n: number): number {
+        const dp: number[] = new Array(n + 1).fill(0);
+        dp[1] = 1;
+        
+        for (let i = 2; i <= n; i++) {
+          dp[i] = dp[i-1] + dp[i-2];
+        }
+        
+        return dp[n];
+      }
+
+      // Example usage
+      console.log(fibonacci(10)); // Output: 55
+      \`\`\`
+
+      ## Common DP Patterns
+      1. Optimal Substructure
+      2. Overlapping Subproblems
+      3. State Transition
+      4. Memoization vs Tabulation
+
+      ## Best Practices
+      - Identify the subproblem pattern
+      - Define clear state transitions
+      - Choose between top-down and bottom-up approaches
+    `,
+    tags: [{ id: '60', name: 'algorithms' }, { id: '61', name: 'dynamic-programming' }],
+    createdAt: generateDate(1),
+    slug: 'dynamic-programming-fundamentals'
+  },
+  {
+    id: '52',
+    title: 'Graph Algorithms in Practice',
+    excerpt: 'Comprehensive guide to implementing and understanding essential graph algorithms.',
+    content: `
+      Graph algorithms are fundamental to solving many real-world problems, from social networks to route planning.
+
+      ## Core Graph Algorithms
+      Let's implement some key algorithms:
+
+      \`\`\`typescript
+      class Graph {
+        private adjacencyList: Map<string, string[]>;
+
+        constructor() {
+          this.adjacencyList = new Map();
+        }
+
+        addVertex(vertex: string) {
+          if (!this.adjacencyList.has(vertex)) {
+            this.adjacencyList.set(vertex, []);
+          }
+        }
+
+        // BFS Implementation
+        bfs(start: string): string[] {
+          const queue: string[] = [start];
+          const visited = new Set([start]);
+          const result: string[] = [];
+
+          while (queue.length) {
+            const vertex = queue.shift()!;
+            result.push(vertex);
+
+            for (const neighbor of this.adjacencyList.get(vertex) || []) {
+              if (!visited.has(neighbor)) {
+                visited.add(neighbor);
+                queue.push(neighbor);
+              }
+            }
+          }
+
+          return result;
+        }
+      }
+      \`\`\`
+
+      ## Applications
+      - Social Network Analysis
+      - Route Planning
+      - Network Flow
+      - Dependency Resolution
+    `,
+    tags: [{ id: '60', name: 'algorithms' }, { id: '62', name: 'graph-algorithms' }],
+    createdAt: generateDate(2),
+    slug: 'graph-algorithms-in-practice'
+  },
+  {
+    id: '53',
+    title: 'Sorting Algorithms Deep Dive',
+    excerpt: 'Detailed analysis and implementation of various sorting algorithms with performance comparisons.',
+    content: `
+      Understanding sorting algorithms is crucial for every programmer. Let's explore different approaches and their trade-offs.
+
+      ## Quick Sort Implementation
+      \`\`\`typescript
+      function quickSort(arr: number[]): number[] {
+        if (arr.length <= 1) return arr;
+
+        const pivot = arr[arr.length - 1];
+        const left: number[] = [];
+        const right: number[] = [];
+
+        for (let i = 0; i < arr.length - 1; i++) {
+          if (arr[i] < pivot) {
+            left.push(arr[i]);
+          } else {
+            right.push(arr[i]);
+          }
+        }
+
+        return [...quickSort(left), pivot, ...quickSort(right)];
+      }
+
+      // Merge Sort Implementation
+      function mergeSort(arr: number[]): number[] {
+        if (arr.length <= 1) return arr;
+
+        const mid = Math.floor(arr.length / 2);
+        const left = arr.slice(0, mid);
+        const right = arr.slice(mid);
+
+        return merge(mergeSort(left), mergeSort(right));
+      }
+      \`\`\`
+
+      ## Performance Analysis
+      - Quick Sort: O(n log n) average case
+      - Merge Sort: O(n log n) guaranteed
+      - Bubble Sort: O(n²)
+      - Selection Sort: O(n²)
+    `,
+    tags: [{ id: '60', name: 'algorithms' }, { id: '63', name: 'sorting-algorithms' }],
+    createdAt: generateDate(3),
+    slug: 'sorting-algorithms-deep-dive'
+  },
+  {
+    id: '54',
+    title: 'Binary Search and Its Variations',
+    excerpt: 'Advanced techniques and variations of binary search algorithm with real-world applications.',
+    content: `
+      Binary search is more than just finding elements in a sorted array. Let's explore its variations and applications.
+
+      ## Standard Binary Search
+      \`\`\`typescript
+      function binarySearch(arr: number[], target: number): number {
+        let left = 0;
+        let right = arr.length - 1;
+
+        while (left <= right) {
+          const mid = Math.floor((left + right) / 2);
+          
+          if (arr[mid] === target) return mid;
+          if (arr[mid] < target) {
+            left = mid + 1;
+          } else {
+            right = mid - 1;
+          }
+        }
+
+        return -1;
+      }
+
+      // Binary Search on Answer concept
+      function findFirstOccurrence(arr: number[], target: number): number {
+        let left = 0;
+        let right = arr.length - 1;
+        let result = -1;
+
+        while (left <= right) {
+          const mid = Math.floor((left + right) / 2);
+          
+          if (arr[mid] === target) {
+            result = mid;
+            right = mid - 1; // Continue searching left
+          } else if (arr[mid] < target) {
+            left = mid + 1;
+          } else {
+            right = mid - 1;
+          }
+        }
+
+        return result;
+      }
+      \`\`\`
+
+      ## Applications
+      - Finding elements in sorted arrays
+      - Finding bounds in monotonic functions
+      - Optimization problems
+      - Rate limiting algorithms
+    `,
+    tags: [{ id: '60', name: 'algorithms' }, { id: '64', name: 'binary-search' }],
+    createdAt: generateDate(4),
+    slug: 'binary-search-and-variations'
+  }
+];
+
 // Additional articles for pagination
 const additionalArticles: Article[] = Array.from({ length: 25 }, (_, index) => {
   const id = (index + 6).toString();
@@ -724,5 +936,5 @@ Quick recap of ${topics[topicIndex].title} concepts.`,
   };
 });
 
-// Combine all articles
-export const MOCK_ARTICLES: Article[] = [...baseArticles, ...additionalArticles, ...moreArticles];
+// Combine all articles (update the export)
+export const MOCK_ARTICLES: Article[] = [...baseArticles, ...algorithmArticles, ...additionalArticles, ...moreArticles];

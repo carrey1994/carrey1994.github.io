@@ -3,6 +3,10 @@ import type { Article } from '../types'
 import MouseFollowGradient from './MouseFollowGradient'
 
 export default function ArticleCard({ article }: { article: Article }) {
+  const handleClick = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <article className="glass-effect card-hover rounded-xl p-6 group relative overflow-hidden">
       <MouseFollowGradient className="absolute inset-0 z-0" />
@@ -13,6 +17,7 @@ export default function ArticleCard({ article }: { article: Article }) {
         <Link 
           href={`/articles/${article.id}`} 
           className="relative inline-block animate-text-gradient hover:opacity-90 transition-all duration-300 group/title"
+          onClick={handleClick}
         >
           {article.title}
           <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 group-hover/title:w-full transition-all duration-300" />
@@ -36,6 +41,7 @@ export default function ArticleCard({ article }: { article: Article }) {
         <Link 
           href={`/articles/${article.id}`}
           className="inline-flex items-center text-blue-400 hover:text-blue-300 transition-colors group/link relative overflow-hidden px-2 py-1 -ml-2"
+          onClick={handleClick}
         >
           <span className="relative z-10">Read more</span>
           <span className="relative z-10 transform translate-x-0 group-hover/link:translate-x-1 transition-transform duration-200 ml-1">
@@ -57,6 +63,7 @@ export default function ArticleCard({ article }: { article: Article }) {
         href={`/articles/${article.id}`}
         className="absolute inset-0 z-0"
         aria-label={`Read more about ${article.title}`}
+        onClick={handleClick}
       />
 
       {/* Subtle border glow on hover */}

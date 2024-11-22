@@ -27,6 +27,8 @@ export default function ClientArticlePage({ article, formattedContent, relatedAr
     }
 
     setMounted(true)
+    // Scroll to top when component mounts or article changes
+    window.scrollTo(0, 0);
 
     // Reset scroll position when component unmounts
     return () => {
@@ -34,7 +36,7 @@ export default function ClientArticlePage({ article, formattedContent, relatedAr
         history.scrollRestoration = 'auto';
       }
     }
-  }, [])
+  }, [article.id]) // Add article.id as dependency to ensure scroll on article change
 
   // Combine all text content for table of contents
   const textContent = formattedContent
