@@ -25,40 +25,38 @@ const algorithmArticles: Article[] = [
     id: '51',
     title: 'Dynamic Programming Fundamentals',
     excerpt: 'Master dynamic programming with step-by-step examples and practical problem-solving techniques.',
-    content: `
-      Dynamic Programming (DP) is a powerful algorithmic technique that solves complex problems by breaking them down into simpler subproblems.
+    content: `Dynamic Programming (DP) is a powerful algorithmic technique that solves complex problems by breaking them down into simpler subproblems.
 
-      ## Understanding Dynamic Programming
-      Let's explore fundamental concepts with practical examples:
+## Understanding Dynamic Programming
+Let's explore fundamental concepts with practical examples:
 
-      \`\`\`typescript
-      // Fibonacci with DP
-      function fibonacci(n: number): number {
-        const dp: number[] = new Array(n + 1).fill(0);
-        dp[1] = 1;
-        
-        for (let i = 2; i <= n; i++) {
-          dp[i] = dp[i-1] + dp[i-2];
-        }
-        
-        return dp[n];
-      }
+\`\`\`typescript
+// Fibonacci with DP
+function fibonacci(n: number): number {
+    const dp: number[] = new Array(n + 1).fill(0);
+    dp[1] = 1;
+    
+    for (let i = 2; i <= n; i++) {
+        dp[i] = dp[i-1] + dp[i-2];
+    }
+    
+    return dp[n];
+}
 
-      // Example usage
-      console.log(fibonacci(10)); // Output: 55
-      \`\`\`
+// Example usage
+console.log(fibonacci(10)); // Output: 55
+\`\`\`
 
-      ## Common DP Patterns
-      1. Optimal Substructure
-      2. Overlapping Subproblems
-      3. State Transition
-      4. Memoization vs Tabulation
+## Common DP Patterns
+1. Optimal Substructure
+2. Overlapping Subproblems
+3. State Transition
+4. Memoization vs Tabulation
 
-      ## Best Practices
-      - Identify the subproblem pattern
-      - Define clear state transitions
-      - Choose between top-down and bottom-up approaches
-    `,
+## Best Practices
+- Identify the subproblem pattern
+- Define clear state transitions
+- Choose between top-down and bottom-up approaches`,
     tags: [{ id: '60', name: 'algorithms' }, { id: '61', name: 'dynamic-programming' }],
     createdAt: generateDate(1),
     slug: 'dynamic-programming-fundamentals'
@@ -67,55 +65,53 @@ const algorithmArticles: Article[] = [
     id: '52',
     title: 'Graph Algorithms in Practice',
     excerpt: 'Comprehensive guide to implementing and understanding essential graph algorithms.',
-    content: `
-      Graph algorithms are fundamental to solving many real-world problems, from social networks to route planning.
+    content: `Graph algorithms are fundamental to solving many real-world problems, from social networks to route planning.
 
-      ## Core Graph Algorithms
-      Let's implement some key algorithms:
+## Core Graph Algorithms
+Let's implement some key algorithms:
 
-      \`\`\`typescript
-      class Graph {
-        private adjacencyList: Map<string, string[]>;
+\`\`\`typescript
+class Graph {
+    private adjacencyList: Map<string, string[]>;
 
-        constructor() {
-          this.adjacencyList = new Map();
-        }
+    constructor() {
+        this.adjacencyList = new Map();
+    }
 
-        addVertex(vertex: string) {
-          if (!this.adjacencyList.has(vertex)) {
+    addVertex(vertex: string) {
+        if (!this.adjacencyList.has(vertex)) {
             this.adjacencyList.set(vertex, []);
-          }
         }
+    }
 
-        // BFS Implementation
-        bfs(start: string): string[] {
-          const queue: string[] = [start];
-          const visited = new Set([start]);
-          const result: string[] = [];
+    // BFS Implementation
+    bfs(start: string): string[] {
+        const queue: string[] = [start];
+        const visited = new Set([start]);
+        const result: string[] = [];
 
-          while (queue.length) {
+        while (queue.length) {
             const vertex = queue.shift()!;
             result.push(vertex);
 
             for (const neighbor of this.adjacencyList.get(vertex) || []) {
-              if (!visited.has(neighbor)) {
-                visited.add(neighbor);
-                queue.push(neighbor);
-              }
+                if (!visited.has(neighbor)) {
+                    visited.add(neighbor);
+                    queue.push(neighbor);
+                }
             }
-          }
-
-          return result;
         }
-      }
-      \`\`\`
 
-      ## Applications
-      - Social Network Analysis
-      - Route Planning
-      - Network Flow
-      - Dependency Resolution
-    `,
+        return result;
+    }
+}
+\`\`\`
+
+## Applications
+- Social Network Analysis
+- Route Planning
+- Network Flow
+- Dependency Resolution`,
     tags: [{ id: '60', name: 'algorithms' }, { id: '62', name: 'graph-algorithms' }],
     createdAt: generateDate(2),
     slug: 'graph-algorithms-in-practice'

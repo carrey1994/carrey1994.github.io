@@ -12,7 +12,6 @@ import { Article } from '@/app/types'
 
 interface ClientArticlePageProps {
   article: Article
-  formattedContent: Array<{ type: 'text' | 'code'; content: string; language?: string }>
   relatedArticles: Article[]
 }
 
@@ -38,19 +37,6 @@ export default function ClientArticlePage({ article, formattedContent, relatedAr
     }
   }, [article.id]) // Add article.id as dependency to ensure scroll on article change
 
-  // Combine all text content for table of contents
-  const textContent = formattedContent
-    .filter(block => block.type === 'text')
-    .map(block => block.content)
-    .join('\n\n');
-
-  // Reconstruct markdown content from formatted blocks
-  const markdownContent = formattedContent.map(block => {
-    if (block.type === 'code') {
-      return `\`\`\`${block.language || ''}\n${block.content}\n\`\`\``;
-    }
-    return block.content;
-  }).join('\n\n');
 
   return (
     <>
@@ -90,7 +76,7 @@ export default function ClientArticlePage({ article, formattedContent, relatedAr
                 <div className="absolute -bottom-6 left-0 w-24 h-1 bg-gradient-to-r from-blue-500/50 to-cyan-500/50 rounded-full" />
               </header>
 
-              <MDXContent content={markdownContent} />
+              <MDXContent content={article.content} />
             </article>
           </FadeIn>
 
@@ -162,7 +148,7 @@ export default function ClientArticlePage({ article, formattedContent, relatedAr
         {/* Sidebar */}
         <div className="lg:col-span-1">
           <FadeIn delay={300}>
-            {mounted && <TableOfContents content={textContent} />}
+            {mounted && <TableOfContents content={article.content} />}
           </FadeIn>
         </div>
       </div>

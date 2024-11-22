@@ -9,21 +9,17 @@ import Link from 'next/link'
 import '../styles/mdx.css'
 
 const options = {
-  theme: 'github-dark',
+  theme: 'dracula',
   keepBackground: true,
   defaultLang: 'plaintext',
-  onVisitLine(node: any) {
-    if (node.children.length === 0) {
-      node.children = [{ type: 'text', value: ' ' }]
-    }
-  },
+  keepIndent: true,
+  // Remove onVisitLine as it might interfere with indentation
   onVisitHighlightedLine(node: any) {
     node.properties.className = ['highlighted']
   },
   onVisitHighlightedWord(node: any, id: string) {
     node.properties.className = ['word', `${id}`]
   },
-  showLineNumbers: true,
 }
 
 interface MDXContentProps {
@@ -42,31 +38,10 @@ export default function MDXContent({ content }: MDXContentProps) {
           return;
         }
         
-        // Format content with proper spacing
-        const formattedContent = content
-          // Ensure proper list spacing
-          .split('\n')
-          .map(line => {
-            // Handle unordered lists
-            if (line.trim().startsWith('- ') || line.trim().startsWith('* ')) {
-              return line.trimEnd();
-            }
-            // Handle ordered lists
-            if (/^\d+\.\s/.test(line.trim())) {
-              return line.trimEnd();
-            }
-            // Handle other content
-            return line.trim();
-          })
-          .join('\n')
-          // Fix extra newlines
-          .replace(/\n{3,}/g, '\n\n')
-          // Ensure space after list markers
-          .replace(/^-(?!\s)/gm, '- ')
-          .replace(/^\*(?!\s)/gm, '* ')
-          .replace(/^(\d+\.)(?!\s)/gm, '$1 ');
+        // Normalize line endings but preserve indentation
+        const normalizedContent = content.replace(/\r\n?/g, '\n');
         
-        const mdx = await serialize(formattedContent, {
+        const mdx = await serialize(normalizedContent, {
           mdxOptions: {
             rehypePlugins: [
               [rehypePrettyCode, options],
@@ -85,8 +60,12 @@ export default function MDXContent({ content }: MDXContentProps) {
 
   const handleCopy = async (code: string) => {
     try {
-      // Remove line numbers before copying
-      const cleanCode = code.replace(/^\d+\s+/gm, '')
+      // Clean the code before copying but preserve indentation
+      const cleanCode = code
+        .split('\n')
+        .map(line => line.replace(/^\d+(?:\s{2}|\t)/, '')) // Remove line numbers while keeping indentation
+        .join('\n')
+        .trimEnd(); // Only trim end to preserve leading whitespace
       await navigator.clipboard.writeText(cleanCode)
       setCopiedCode(code)
       setTimeout(() => setCopiedCode(null), 2000)
@@ -108,22 +87,32 @@ export default function MDXContent({ content }: MDXContentProps) {
 
       return (
         <pre {...props} data-language={language}>
-          {children}
-          <button
-            onClick={() => handleCopy(code)}
-            className="copy-button group"
-            aria-label={copiedCode === code ? 'Copied!' : 'Copy code'}
-            title={copiedCode === code ? 'Copied!' : 'Copy code'}
-          >
-            {copiedCode === code ? (
-              <Check className="w-4 h-4 transition-transform group-hover:scale-110" />
-            ) : (
-              <Copy className="w-4 h-4 transition-transform group-hover:scale-110" />
-            )}
-          </button>
+          <div className="code-header">
+            {language && <span className="language-tag">{language}</span>}
+            <button
+              onClick={() => handleCopy(code)}
+              className="copy-button group"
+              aria-label={copiedCode === code ? 'Copied!' : 'Copy code'}
+              title={copiedCode === code ? 'Copied!' : 'Copy code'}
+            >
+              {copiedCode === code ? (
+                <Check className="w-4 h-4 transition-transform group-hover:scale-110" />
+              ) : (
+                <Copy className="w-4 h-4 transition-transform group-hover:scale-110" />
+              )}
+            </button>
+          </div>
+          <code className="code-content">
+            {children}
+          </code>
         </pre>
       )
     },
+    code: ({ children, className, ...props }: any) => (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    ),
     a: ({ href, children }: any) => {
       const isInternal = href?.startsWith('/')
       if (isInternal) {

@@ -1,0 +1,167 @@
+/* Token colors */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  @apply text-gray-500 italic;
+}
+
+.token.namespace {
+  @apply opacity-70;
+}
+
+.token.string,
+.token.attr-value {
+  @apply text-green-400;
+}
+
+.token.punctuation,
+.token.operator {
+  @apply text-gray-400;
+}
+
+.token.entity,
+.token.url,
+.token.symbol,
+.token.number,
+.token.boolean,
+.token.variable,
+.token.constant,
+.token.property,
+.token.regex,
+.token.inserted {
+  @apply text-orange-400;
+}
+
+.token.atrule,
+.token.keyword,
+.token.attr-name {
+  @apply text-purple-400;
+}
+
+.token.function,
+.token.deleted {
+  @apply text-blue-400;
+}
+
+.token.tag,
+.token.selector,
+.token.class-name {
+  @apply text-yellow-300;
+}
+
+/* Language-specific overrides */
+.language-typescript .token.class-name,
+.language-javascript .token.class-name {
+  @apply text-yellow-300;
+}
+
+.language-typescript .token.builtin {
+  @apply text-blue-400;
+}
+
+.language-markdown .token.title,
+.language-markdown .token.title .token.punctuation {
+  @apply text-blue-400 font-bold;
+}
+
+.language-markdown .token.blockquote.punctuation {
+  @apply text-gray-500;
+}
+
+.language-markdown .token.code {
+  @apply text-green-400;
+}
+
+.language-markdown .token.url .token.content {
+  @apply text-blue-400;
+}
+
+/* SQL specific */
+.language-sql .token.keyword {
+  @apply text-purple-400 font-semibold;
+}
+
+/* JSON specific */
+.language-json .token.property {
+  @apply text-blue-400;
+}
+
+/* YAML specific */
+.language-yaml .token.key {
+  @apply text-blue-400;
+}
+
+/* CSS/SCSS specific */
+.language-css .token.property,
+.language-scss .token.property {
+  @apply text-purple-400;
+}
+
+.language-css .token.function,
+.language-scss .token.function {
+  @apply text-orange-400;
+}
+
+/* Code block container */
+.mdx-content pre {
+  @apply relative my-6 rounded-lg overflow-hidden;
+  @apply bg-gray-900/50 backdrop-blur-sm;
+  @apply border border-gray-800/50 shadow-lg;
+  @apply ring-1 ring-blue-500/10;
+}
+
+/* Code block table */
+.mdx-content pre code table {
+  @apply w-full border-collapse;
+}
+
+/* Line styles */
+.mdx-content pre code tr {
+  @apply transition-colors duration-150;
+}
+
+/* Line hover effect */
+.mdx-content pre code tr:hover td:last-child {
+  @apply bg-blue-900/20 rounded-r;
+}
+
+/* Line numbers column */
+.mdx-content pre code td:first-child {
+  @apply text-right pr-4 text-gray-600 select-none w-12 text-sm;
+  @apply border-r border-gray-800/50;
+  @apply opacity-50 hover:opacity-75 transition-opacity;
+}
+
+/* Code content column */
+.mdx-content pre code td:last-child {
+  @apply pl-4 pr-2 py-0.5;
+  @apply whitespace-pre text-sm;
+}
+
+/* Language tag */
+.mdx-content pre .language-tag {
+  @apply text-xs text-gray-500 px-2 py-1 rounded-md bg-gray-900/50;
+  @apply font-mono;
+}
+
+/* Copy button */
+.mdx-content pre .copy-button {
+  @apply p-2 rounded-lg bg-blue-900/30 text-blue-300;
+  @apply opacity-0 hover:opacity-100 transition-all duration-200;
+  @apply hover:bg-blue-900/50;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+}
+
+/* Copy button container */
+.mdx-content pre > div:last-child {
+  @apply absolute top-3 right-3 flex items-center gap-2;
+  @apply z-10;
+}
+
+/* Font settings */
+.mdx-content pre code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  font-variant-ligatures: none;
+  tab-size: 2;
+}

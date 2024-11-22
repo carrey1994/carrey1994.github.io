@@ -76,9 +76,92 @@
 .mdx-content pre code {
   @apply grid text-sm;
   counter-reset: line;
+  tab-size: 4 !important;
+  -moz-tab-size: 4 !important;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   -webkit-font-smoothing: auto;
   -moz-osx-font-smoothing: auto;
+  white-space: pre !important;
+  display: inline-block;
+  min-width: 100%;
+}
+
+/* Code content */
+.mdx-content pre code .line {
+  @apply px-4 py-0.5 border-l-2 border-transparent;
+  display: inline-block;
+  min-width: 100%;
+  white-space: pre !important;
+  word-spacing: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+  tab-size: 4;
+  -moz-tab-size: 4;
+}
+
+/* Preserve whitespace class added by rehype-pretty-code */
+.mdx-content pre code .preserve-whitespace {
+  white-space: pre !important;
+}
+
+.mdx-content pre code .line::before {
+  counter-increment: line;
+  content: counter(line);
+  @apply inline-block w-8 mr-4 text-gray-600 text-right text-xs select-none font-mono;
+  white-space: pre !important;
+}
+
+/* Highlighted line */
+.mdx-content pre code .line.highlighted {
+  @apply bg-blue-900/40 border-l-2 border-blue-400;
+}
+
+/* Highlighted word */
+.mdx-content pre code .word {
+  @apply bg-blue-500/20 rounded px-1 py-0.5;
+}
+
+/* Individual code spans */
+.mdx-content pre code span {
+  white-space: pre !important;
+  display: inline-block;
+}
+
+/* Code block container */
+.mdx-content .code-block {
+  white-space: pre !important;
+  tab-size: 4;
+  -moz-tab-size: 4;
+}
+
+/* Ensure all code elements preserve whitespace */
+.mdx-content pre,
+.mdx-content pre code,
+.mdx-content pre code .line,
+.mdx-content pre code span,
+.mdx-content pre [data-line] {
+  white-space: pre !important;
+  tab-size: 4;
+  -moz-tab-size: 4;
+}
+
+/* Language badge */
+.mdx-content pre[data-language]::before {
+  content: attr(data-language);
+  @apply absolute top-3 right-12 text-xs text-blue-300 bg-blue-900/30 px-2 py-1 rounded;
+  @apply uppercase tracking-wider font-medium;
+}
+
+/* Copy button */
+.mdx-content .copy-button {
+  @apply absolute right-3 top-3 p-2 rounded-lg bg-blue-900/30 text-blue-300;
+  @apply opacity-0 transition-all duration-200;
+  @apply hover:bg-blue-800/40 hover:text-blue-200 hover:scale-105;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50;
+}
+
+.mdx-content pre:hover .copy-button {
+  @apply opacity-100;
 }
 
 /* Headings */
@@ -97,54 +180,7 @@
   @apply text-xl mt-6 mb-3;
 }
 
-/* Scrollbar styles */
-.mdx-content pre::-webkit-scrollbar {
-  @apply h-1.5 w-1.5;
-}
-
-.mdx-content pre::-webkit-scrollbar-track {
-  @apply bg-transparent rounded-full;
-}
-
-.mdx-content pre::-webkit-scrollbar-thumb {
-  @apply bg-gray-700 rounded-full hover:bg-gray-600 transition-colors;
-}
-
-/* Code content */
-.mdx-content pre code .line {
-  @apply px-4 py-0.5 border-l-2 border-transparent;
-  display: inline-block;
-  min-width: 100%;
-}
-
-.mdx-content pre code .line::before {
-  counter-increment: line;
-  content: counter(line);
-  @apply inline-block w-5 mr-4 text-gray-600 text-right text-xs select-none font-mono;
-}
-
-.mdx-content pre code .line.highlighted {
-  @apply bg-blue-900/40 border-l-2 border-blue-400;
-}
-
-.mdx-content pre code .word {
-  @apply bg-blue-500/20 rounded px-1 py-0.5;
-}
-
-/* Language badge */
-.mdx-content pre[data-language]::before {
-  content: attr(data-language);
-  @apply absolute top-3 right-12 text-xs text-blue-300 bg-blue-900/30 px-2 py-1 rounded;
-  @apply uppercase tracking-wider font-medium;
-}
-
-/* Inline code */
-.mdx-content :not(pre) > code {
-  @apply bg-blue-900/20 text-blue-300 rounded px-1.5 py-0.5 text-sm font-mono;
-  @apply border border-blue-500/10;
-}
-
-/* Lists - Base Styles */
+/* Lists */
 .mdx-content ul,
 .mdx-content ol {
   @apply list-outside pl-5 my-4 space-y-2;
@@ -170,6 +206,35 @@
 
 .mdx-content ol > li::marker {
   @apply text-blue-400;
+}
+
+/* Paragraphs */
+.mdx-content p {
+  @apply leading-relaxed mb-4;
+}
+
+/* Links */
+.mdx-content a {
+  @apply text-blue-400 hover:text-blue-300 no-underline hover:underline transition-colors;
+}
+
+/* Inline code */
+.mdx-content :not(pre) > code {
+  @apply bg-blue-900/20 text-blue-300 rounded px-1.5 py-0.5 text-sm font-mono;
+  @apply border border-blue-500/10;
+}
+
+/* Scrollbar styles */
+.mdx-content pre::-webkit-scrollbar {
+  @apply h-1.5 w-1.5;
+}
+
+.mdx-content pre::-webkit-scrollbar-track {
+  @apply bg-transparent rounded-full;
+}
+
+.mdx-content pre::-webkit-scrollbar-thumb {
+  @apply bg-gray-700 rounded-full hover:bg-gray-600 transition-colors;
 }
 
 /* Nested Lists */
@@ -224,11 +289,6 @@
   @apply border-l-4 border-blue-500/20 pl-4 italic text-gray-400 my-6;
 }
 
-/* Links */
-.mdx-content a {
-  @apply text-blue-400 hover:text-blue-300 no-underline hover:underline transition-colors;
-}
-
 /* Tables */
 .mdx-content table {
   @apply w-full my-6 border-collapse;
@@ -250,23 +310,6 @@
 /* Images */
 .mdx-content img {
   @apply rounded-lg shadow-lg my-6;
-}
-
-/* Copy button */
-.mdx-content .copy-button {
-  @apply absolute right-3 top-3 p-2 rounded-lg bg-blue-900/30 text-blue-300;
-  @apply opacity-0 transition-all duration-200;
-  @apply hover:bg-blue-800/40 hover:text-blue-200 hover:scale-105;
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50;
-}
-
-.mdx-content pre:hover .copy-button {
-  @apply opacity-100;
-}
-
-/* Paragraphs */
-.mdx-content p {
-  @apply leading-relaxed mb-4;
 }
 
 /* Strong and emphasis */
