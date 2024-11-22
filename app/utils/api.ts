@@ -19,7 +19,7 @@ function transformArticle(apiArticle: any): Article {
 
 export async function fetchArticles(page: number = 1, limit: number = 5): Promise<ArticleListResponse> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/articles?page=${page}&limit=${limit}`);
+    const response = await fetch(`${API_BASE_URL}/articles?page=${page}&limit=${limit}`);
     
     if (!response.ok) {
       const errorData = await response.json();
@@ -41,7 +41,7 @@ export async function fetchArticles(page: number = 1, limit: number = 5): Promis
 }
 
 export async function fetchArticleById(id: string): Promise<Article> {
-  const response = await fetch(`${API_BASE_URL}/api/articles/id/${id}`);
+  const response = await fetch(`${API_BASE_URL}/articles/id/${id}`);
   
   if (!response.ok) {
     const errorData = await response.json();
@@ -60,7 +60,7 @@ export async function fetchArticleById(id: string): Promise<Article> {
 
 export async function fetchArticlesByTag(tag: string, page: number = 1, limit: number = 5): Promise<ArticleListResponse> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/articles?tag=${tag}&page=${page}&limit=${limit}`);
+    const response = await fetch(`${API_BASE_URL}/articles?tag=${tag}&page=${page}&limit=${limit}`);
     
     if (!response.ok) {
       const errorData = await response.json();
@@ -83,7 +83,7 @@ export async function fetchArticlesByTag(tag: string, page: number = 1, limit: n
 
 export async function fetchTags(): Promise<Tag[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/tags`);
+    const response = await fetch(`${API_BASE_URL}/tags`);
     
     if (!response.ok) {
       const errorData = await response.json();
@@ -100,7 +100,7 @@ export async function fetchTags(): Promise<Tag[]> {
 
 export async function fetchRelatedArticles(id: string): Promise<Article[]> {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/articles/id/${id}/related`);
+    const response = await fetch(`${API_BASE_URL}/articles/id/${id}/related`);
     
     if (!response.ok) {
       const errorData = await response.json();
