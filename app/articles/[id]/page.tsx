@@ -3,7 +3,7 @@
 import { ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
 import Link from 'next/link';
 import { notFound, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import EstimatedReadTime from '../../components/EstimatedReadTime';
 import FadeIn from '../../components/FadeIn';
 import MDXContent from '../../components/MDXContent';
@@ -13,7 +13,8 @@ import TableOfContents from '../../components/TableOfContents';
 import type { Article } from '../../types';
 import { fetchArticleById, fetchRelatedArticles } from '../../utils/api';
 
-export default function ArticlePage({ params }: { params: { id: string } }) {
+export default function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = use(params);
   const [article, setArticle] = useState<Article | null>(null);
   const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,11 +29,11 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
       setError(null);
 
       try {
-        const articleData = await fetchArticleById(params.id);
+        const articleData = await fetchArticleById(resolvedParams.id);
         setArticle(articleData);
         setIsLoading(false);
 
-        const relatedData = await fetchRelatedArticles(params.id);
+        const relatedData = await fetchRelatedArticles(resolvedParams.id);
         setRelatedArticles(relatedData);
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -47,7 +48,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
     };
 
     loadData();
-  }, [params.id]);
+  }, [resolvedParams.id]);
 
   if (isLoading) {
     return (
@@ -107,6 +108,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
   }
 
   if (!article) {
+    console.log('Article is null, showing 404');
     return notFound();
   }
 

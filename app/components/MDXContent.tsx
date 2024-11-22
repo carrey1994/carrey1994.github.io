@@ -13,7 +13,6 @@ const options = {
   keepBackground: true,
   defaultLang: 'plaintext',
   onVisitLine(node: any) {
-    // Prevent empty lines from collapsing
     if (node.children.length === 0) {
       node.children = [{ type: 'text', value: ' ' }]
     }
@@ -24,7 +23,6 @@ const options = {
   onVisitHighlightedWord(node: any, id: string) {
     node.properties.className = ['word', `${id}`]
   },
-  // Add line numbers
   showLineNumbers: true,
 }
 
@@ -39,13 +37,32 @@ export default function MDXContent({ content }: MDXContentProps) {
   useEffect(() => {
     const prepareMDX = async () => {
       try {
-        const mdx = await serialize(content, {
+        console.log('Preparing MDX for content:', content);
+        if (!content) {
+          console.warn('Content is empty or undefined');
+          return;
+        }
+
+        // Clean up the content by removing the outer <pre><code> tags and decoding HTML entities
+        let cleanContent = content
+          .replace(/<\/?pre>/g, '')
+          .replace(/<\/?code>/g, '')
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'")
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&amp;/g, '&');
+        
+        console.log('Cleaned content:', cleanContent);
+        
+        const mdx = await serialize(cleanContent, {
           mdxOptions: {
             rehypePlugins: [
               [rehypePrettyCode, options],
             ],
           },
         })
+        console.log('MDX serialization successful:', mdx);
         setMdxSource(mdx)
       } catch (error) {
         console.error('Error preparing MDX:', error)
@@ -55,9 +72,12 @@ export default function MDXContent({ content }: MDXContentProps) {
     prepareMDX()
   }, [content])
 
+  useEffect(() => {
+    console.log('MDX source state updated:', mdxSource);
+  }, [mdxSource]);
+
   const handleCopy = async (code: string) => {
     try {
-      // Remove line numbers before copying
       const cleanCode = code.replace(/^\d+\s+/gm, '')
       await navigator.clipboard.writeText(cleanCode)
       setCopiedCode(code)
@@ -96,7 +116,6 @@ export default function MDXContent({ content }: MDXContentProps) {
         </pre>
       )
     },
-    // Add custom link handling
     a: ({ href, children }: any) => {
       const isInternal = href?.startsWith('/')
       if (isInternal) {
