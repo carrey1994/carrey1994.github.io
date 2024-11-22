@@ -25,21 +25,24 @@ export default function Pagination({
   const getPageNumbers = () => {
     const pageNumbers = [];
     
+    // If total pages is less than or equal to 5, show all pages
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+      }
+      return pageNumbers;
+    }
+    
+    // For more than 5 pages, use the existing logic
     if (currentPage <= 3) {
       // If we're on pages 1-3, show 1, 2, 3, ..., last
       pageNumbers.push(1, 2, 3);
-      if (totalPages > 4) {
-        pageNumbers.push('...');
-        pageNumbers.push(totalPages);
-      } else if (totalPages === 4) {
-        pageNumbers.push(4);
-      }
+      pageNumbers.push('...');
+      pageNumbers.push(totalPages);
     } else if (currentPage >= totalPages - 2) {
       // If we're on last 3 pages, show 1, ..., last-2, last-1, last
       pageNumbers.push(1);
-      if (totalPages > 4) {
-        pageNumbers.push('...');
-      }
+      pageNumbers.push('...');
       pageNumbers.push(totalPages - 2, totalPages - 1, totalPages);
     } else {
       // We're somewhere in the middle

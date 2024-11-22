@@ -30,12 +30,13 @@ export async function fetchArticles(
     }
 
     const data = await response.json();
+    console.log('API Response (fetchArticles):', data); // Add debug logging
 
     return {
       articles: (data.articles || []).map(transformArticle),
-      total: data.meta.total || 0,
-      page: data.meta.page || page,
-      limit: data.meta.limit || limit,
+      total: data.meta.total,
+      page: data.meta.page,
+      limit: data.meta.limit,
     };
   } catch (error) {
     console.error('Error fetching articles:', error);
@@ -68,7 +69,7 @@ export async function fetchArticlesByTag(
 ): Promise<ArticleListResponse> {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/api/articles?tag=${tag}&page=${page}&limit=${limit}`
+      `${API_BASE_URL}/articles?tags=${encodeURIComponent(tag)}&page=${page}&limit=${limit}`
     );
 
     if (!response.ok) {
@@ -77,12 +78,13 @@ export async function fetchArticlesByTag(
     }
 
     const data = await response.json();
+    console.log('API Response (fetchArticlesByTag):', data); // Add debug logging
 
     return {
       articles: (data.articles || []).map(transformArticle),
-      total: data.meta.total || 0,
-      page: data.meta.page || page,
-      limit: data.meta.limit || limit,
+      total: data.meta.total,
+      page: data.meta.page,
+      limit: data.meta.limit,
     };
   } catch (error) {
     console.error('Error fetching articles by tag:', error);

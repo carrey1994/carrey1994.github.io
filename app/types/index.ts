@@ -21,6 +21,7 @@ export interface ArticleListResponse {
   total: number;
   page: number;
   limit: number;
+  totalPages?: number;  // Add this to match API response
 }
 
 export interface Profile {

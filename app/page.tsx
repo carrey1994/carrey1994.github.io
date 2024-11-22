@@ -28,6 +28,7 @@ export default function Home() {
   const [isTitleTransitioning, setIsTitleTransitioning] = useState(false)
   const [articles, setArticles] = useState<Article[]>([])
   const [totalArticles, setTotalArticles] = useState(0)
+  const [totalPages, setTotalPages] = useState(1)  // Add state for totalPages
   const [error, setError] = useState<string | null>(null)
   const articlesRef = useRef<HTMLDivElement>(null)
 
@@ -42,6 +43,8 @@ export default function Home() {
         
         setArticles(response.articles)
         setTotalArticles(response.total)
+        // Use totalPages from API response, or calculate if not provided
+        setTotalPages(response.totalPages || Math.ceil(response.total / ITEMS_PER_PAGE))
       } catch (error) {
         console.error('Failed to fetch articles:', error)
         setError('Failed to load articles. Please try again later.')
@@ -70,7 +73,6 @@ export default function Home() {
     }
   }, [])
 
-  const totalPages = Math.ceil(totalArticles / ITEMS_PER_PAGE)
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
