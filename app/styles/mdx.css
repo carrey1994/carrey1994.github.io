@@ -1,322 +1,285 @@
-/* Base styles */
-.mdx-content {
-  @apply text-gray-300;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Base styles */
+  .mdx-content {
+    @apply text-gray-300;
+  }
+
+  /* Code blocks */
+  .mdx-content pre {
+    @apply relative my-1 p-3 rounded-md bg-[#1E1E1E] backdrop-blur-sm;
+    @apply border border-gray-800/30 shadow-md overflow-x-auto;
+    @apply ring-1 ring-blue-500/5;
+    @apply hover:border-blue-500/10 hover:shadow-lg;
+    @apply transition-all duration-300;
+  }
+
+  /* Copy button */
+  .mdx-content .copy-button {
+    @apply absolute right-3 top-3 p-1.5 rounded-md;
+    @apply bg-gray-800/50 text-gray-400;
+    @apply border border-gray-700/30;
+    @apply opacity-0 transition-all duration-200;
+    @apply hover:bg-gray-700/50 hover:text-gray-300;
+    @apply focus:outline-none focus:ring-1 focus:ring-blue-500/30;
+  }
+
+  .mdx-content pre:hover .copy-button {
+    @apply opacity-100;
+  }
+
+
+  /* Language indicator */
+  .mdx-content pre[data-language]::before {
+    content: attr(data-language);
+    @apply absolute top-3 right-12 text-xs text-gray-400;
+    @apply bg-gray-800/50 px-2 py-1 rounded-md;
+    @apply uppercase tracking-wider font-medium;
+    @apply border border-gray-700/30;
+  }
+
+  /* Line numbers and content */
+  .mdx-content pre code {
+    @apply grid text-sm;
+    counter-reset: line;
+    tab-size: 2;
+    -moz-tab-size: 2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+  }
+
+  /* Code content */
+  .mdx-content pre code .line {
+    @apply pl-12 pr-3 border-l border-transparent;
+    @apply transition-colors duration-200;
+    position: relative;
+    display: inline-block;
+    min-width: 100%;
+  }
+
+
+  .mdx-content pre code .line::before {
+    counter-increment: line;
+    content: counter(line);
+    @apply absolute left-0 w-8 text-gray-600 text-right text-xs select-none font-mono;
+    @apply transition-colors duration-200;
+    padding-right: 0.75rem;
+  }
+
+
+  /* Highlighted line */
+  .mdx-content pre code .line.highlighted {
+    @apply bg-blue-900/20 border-l border-blue-500/30;
+  }
+
+  /* Highlighted word */
+  .mdx-content pre code .word {
+    @apply bg-blue-500/10 rounded-sm px-1 py-0.5;
+  }
+
+  /* Inline code */
+  .mdx-content :not(pre) > code {
+    @apply bg-blue-900/20 text-blue-300 rounded px-1 py-0.5 text-sm font-mono;
+    @apply border border-blue-500/10;
+  }
+
+  /* Scrollbar styles */
+  .mdx-content pre::-webkit-scrollbar {
+    @apply h-1.5 w-1.5;
+  }
+
+  .mdx-content pre::-webkit-scrollbar-track {
+    @apply bg-transparent rounded-full;
+  }
+
+  .mdx-content pre::-webkit-scrollbar-thumb {
+    @apply bg-gray-700 rounded-full hover:bg-gray-600 transition-colors;
+  }
+
+  /* Additional syntax highlighting tokens */
+  .mdx-content .token.class-name,
+  .mdx-content .token.maybe-class-name {
+    @apply text-yellow-200 font-normal;
+  }
+
+  .mdx-content .token.tag,
+  .mdx-content .token.selector {
+    @apply text-pink-400 font-normal;
+  }
+
+  .mdx-content .token.attr-name {
+    @apply text-green-300 font-normal;
+  }
+
+  .mdx-content .token.attr-value {
+    @apply text-green-400 font-normal;
+  }
+
+  .mdx-content .token.regex {
+    @apply text-red-300 font-normal;
+  }
+
+  /* Headings */
+  .mdx-content h1,
+  .mdx-content h2,
+  .mdx-content h3,
+  .mdx-content h4 {
+    @apply text-blue-200 font-bold;
+  }
+
+  .mdx-content h2 {
+    @apply text-2xl mt-8 mb-4 pb-2 border-b border-gray-800/50;
+  }
+
+  .mdx-content h3 {
+    @apply text-xl mt-6 mb-3;
+  }
+
+  /* Lists */
+  .mdx-content ul,
+  .mdx-content ol {
+    @apply list-outside pl-5 my-4 space-y-2;
+  }
+
+  .mdx-content li {
+    @apply text-gray-300 hover:text-gray-200 transition-colors pl-1;
+  }
+
+  /* Unordered Lists */
+  .mdx-content ul {
+    @apply list-disc;
+  }
+
+  .mdx-content ul > li::marker {
+    @apply text-blue-400;
+  }
+
+  /* Ordered Lists */
+  .mdx-content ol {
+    @apply list-decimal;
+  }
+
+  .mdx-content ol > li::marker {
+    @apply text-blue-400;
+  }
+
+  /* Nested Lists */
+  .mdx-content ul ul,
+  .mdx-content ol ol,
+  .mdx-content ul ol,
+  .mdx-content ol ul {
+    @apply my-2 ml-4;
+  }
+
+  /* Nested Unordered Lists */
+  .mdx-content ul ul > li::marker {
+    @apply text-blue-400/80;
+  }
+
+  .mdx-content ul ul ul > li::marker {
+    @apply text-blue-400/60;
+  }
+
+  /* Nested Ordered Lists */
+  .mdx-content ol ol {
+    list-style-type: lower-alpha;
+  }
+
+  .mdx-content ol ol ol {
+    list-style-type: lower-roman;
+  }
+
+  .mdx-content ol ol > li::marker {
+    @apply text-blue-400/80;
+  }
+
+  .mdx-content ol ol ol > li::marker {
+    @apply text-blue-400/60;
+  }
+
+  /* List Item Content */
+  .mdx-content li > p {
+    @apply mb-2;
+  }
+
+  .mdx-content li > pre {
+    @apply my-2;
+  }
+
+  .mdx-content li > code {
+    @apply mx-1;
+  }
+
+  /* Blockquotes */
+  .mdx-content blockquote {
+    @apply border-l-4 border-blue-500/20 pl-4 italic text-gray-400 my-6;
+  }
+
+  /* Tables */
+  .mdx-content table {
+    @apply w-full my-6 border-collapse;
+  }
+
+  .mdx-content th,
+  .mdx-content td {
+    @apply border border-gray-800 px-4 py-2;
+  }
+
+  .mdx-content th {
+    @apply bg-gray-900/50 text-blue-200 font-semibold;
+  }
+
+  .mdx-content tr:nth-child(even) {
+    @apply bg-gray-900/30;
+  }
+
+  /* Images */
+  .mdx-content img {
+    @apply rounded-lg shadow-lg my-6;
+  }
+
+  /* Strong and emphasis */
+  .mdx-content strong {
+    @apply text-blue-200 font-semibold;
+  }
+
+  .mdx-content em {
+    @apply text-blue-100 italic;
+  }
+
+  /* Paragraphs */
+  .mdx-content p {
+    @apply leading-relaxed mb-4;
+  }
+
+  /* Links */
+  .mdx-content a {
+    @apply text-blue-400 hover:text-blue-300 no-underline hover:underline transition-colors;
+  }
 }
 
-/* Code blocks */
-.mdx-content pre {
-  @apply relative my-6 p-4 rounded-lg bg-gray-900/50 backdrop-blur-sm;
-  @apply border border-gray-800/50 shadow-lg overflow-x-auto;
-  @apply ring-1 ring-blue-500/10;
+/* Animations */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-/* Syntax highlighting tokens */
-.mdx-content .token.comment,
-.mdx-content .token.prolog,
-.mdx-content .token.doctype,
-.mdx-content .token.cdata {
-  @apply text-gray-500 italic;
+@keyframes pulse {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.1; }
 }
 
-.mdx-content .token.function {
-  @apply text-blue-400 font-normal;
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1) rotate(3deg); }
 }
 
-.mdx-content .token.keyword {
-  @apply text-purple-400 font-normal;
-}
-
-.mdx-content .token.string {
-  @apply text-green-400 font-normal;
-}
-
-.mdx-content .token.number,
-.mdx-content .token.unit {
-  @apply text-orange-400 font-normal;
-}
-
-.mdx-content .token.boolean,
-.mdx-content .token.constant {
-  @apply text-red-400 font-normal;
-}
-
-.mdx-content .token.property,
-.mdx-content .token.parameter {
-  @apply text-yellow-400 font-normal;
-}
-
-.mdx-content .token.operator,
-.mdx-content .token.punctuation {
-  @apply text-cyan-400 font-normal;
-}
-
-.mdx-content .token.class-name,
-.mdx-content .token.maybe-class-name {
-  @apply text-yellow-200 font-normal;
-}
-
-.mdx-content .token.tag,
-.mdx-content .token.selector {
-  @apply text-pink-400 font-normal;
-}
-
-.mdx-content .token.attr-name {
-  @apply text-green-300 font-normal;
-}
-
-.mdx-content .token.attr-value {
-  @apply text-green-400 font-normal;
-}
-
-.mdx-content .token.regex {
-  @apply text-red-300 font-normal;
-}
-
-/* Line numbers and content */
-.mdx-content pre code {
-  @apply grid text-sm;
-  counter-reset: line;
-  tab-size: 4 !important;
-  -moz-tab-size: 4 !important;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  -webkit-font-smoothing: auto;
-  -moz-osx-font-smoothing: auto;
-  white-space: pre !important;
-  display: inline-block;
-  min-width: 100%;
-}
-
-/* Code content */
-.mdx-content pre code .line {
-  @apply px-4 py-0.5 border-l-2 border-transparent;
-  display: inline-block;
-  min-width: 100%;
-  white-space: pre !important;
-  word-spacing: normal;
-  word-break: normal;
-  overflow-wrap: normal;
-  tab-size: 4;
-  -moz-tab-size: 4;
-}
-
-/* Preserve whitespace class added by rehype-pretty-code */
-.mdx-content pre code .preserve-whitespace {
-  white-space: pre !important;
-}
-
-.mdx-content pre code .line::before {
-  counter-increment: line;
-  content: counter(line);
-  @apply inline-block w-8 mr-4 text-gray-600 text-right text-xs select-none font-mono;
-  white-space: pre !important;
-}
-
-/* Highlighted line */
-.mdx-content pre code .line.highlighted {
-  @apply bg-blue-900/40 border-l-2 border-blue-400;
-}
-
-/* Highlighted word */
-.mdx-content pre code .word {
-  @apply bg-blue-500/20 rounded px-1 py-0.5;
-}
-
-/* Individual code spans */
-.mdx-content pre code span {
-  white-space: pre !important;
-  display: inline-block;
-}
-
-/* Code block container */
-.mdx-content .code-block {
-  white-space: pre !important;
-  tab-size: 4;
-  -moz-tab-size: 4;
-}
-
-/* Ensure all code elements preserve whitespace */
-.mdx-content pre,
-.mdx-content pre code,
-.mdx-content pre code .line,
-.mdx-content pre code span,
-.mdx-content pre [data-line] {
-  white-space: pre !important;
-  tab-size: 4;
-  -moz-tab-size: 4;
-}
-
-/* Language badge */
-.mdx-content pre[data-language]::before {
-  content: attr(data-language);
-  @apply absolute top-3 right-12 text-xs text-blue-300 bg-blue-900/30 px-2 py-1 rounded;
-  @apply uppercase tracking-wider font-medium;
-}
-
-/* Copy button */
-.mdx-content .copy-button {
-  @apply absolute right-3 top-3 p-2 rounded-lg bg-blue-900/30 text-blue-300;
-  @apply opacity-0 transition-all duration-200;
-  @apply hover:bg-blue-800/40 hover:text-blue-200 hover:scale-105;
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500/50;
-}
-
-.mdx-content pre:hover .copy-button {
-  @apply opacity-100;
-}
-
-/* Headings */
-.mdx-content h1,
-.mdx-content h2,
-.mdx-content h3,
-.mdx-content h4 {
-  @apply text-blue-200 font-bold;
-}
-
-.mdx-content h2 {
-  @apply text-2xl mt-8 mb-4 pb-2 border-b border-gray-800/50;
-}
-
-.mdx-content h3 {
-  @apply text-xl mt-6 mb-3;
-}
-
-/* Lists */
-.mdx-content ul,
-.mdx-content ol {
-  @apply list-outside pl-5 my-4 space-y-2;
-}
-
-.mdx-content li {
-  @apply text-gray-300 hover:text-gray-200 transition-colors pl-1;
-}
-
-/* Unordered Lists */
-.mdx-content ul {
-  @apply list-disc;
-}
-
-.mdx-content ul > li::marker {
-  @apply text-blue-400;
-}
-
-/* Ordered Lists */
-.mdx-content ol {
-  @apply list-decimal;
-}
-
-.mdx-content ol > li::marker {
-  @apply text-blue-400;
-}
-
-/* Paragraphs */
-.mdx-content p {
-  @apply leading-relaxed mb-4;
-}
-
-/* Links */
-.mdx-content a {
-  @apply text-blue-400 hover:text-blue-300 no-underline hover:underline transition-colors;
-}
-
-/* Inline code */
-.mdx-content :not(pre) > code {
-  @apply bg-blue-900/20 text-blue-300 rounded px-1.5 py-0.5 text-sm font-mono;
-  @apply border border-blue-500/10;
-}
-
-/* Scrollbar styles */
-.mdx-content pre::-webkit-scrollbar {
-  @apply h-1.5 w-1.5;
-}
-
-.mdx-content pre::-webkit-scrollbar-track {
-  @apply bg-transparent rounded-full;
-}
-
-.mdx-content pre::-webkit-scrollbar-thumb {
-  @apply bg-gray-700 rounded-full hover:bg-gray-600 transition-colors;
-}
-
-/* Nested Lists */
-.mdx-content ul ul,
-.mdx-content ol ol,
-.mdx-content ul ol,
-.mdx-content ol ul {
-  @apply my-2 ml-4;
-}
-
-/* Nested Unordered Lists */
-.mdx-content ul ul > li::marker {
-  @apply text-blue-400/80;
-}
-
-.mdx-content ul ul ul > li::marker {
-  @apply text-blue-400/60;
-}
-
-/* Nested Ordered Lists */
-.mdx-content ol ol {
-  list-style-type: lower-alpha;
-}
-
-.mdx-content ol ol ol {
-  list-style-type: lower-roman;
-}
-
-.mdx-content ol ol > li::marker {
-  @apply text-blue-400/80;
-}
-
-.mdx-content ol ol ol > li::marker {
-  @apply text-blue-400/60;
-}
-
-/* List Item Content */
-.mdx-content li > p {
-  @apply mb-2;
-}
-
-.mdx-content li > pre {
-  @apply my-2;
-}
-
-.mdx-content li > code {
-  @apply mx-1;
-}
-
-/* Blockquotes */
-.mdx-content blockquote {
-  @apply border-l-4 border-blue-500/20 pl-4 italic text-gray-400 my-6;
-}
-
-/* Tables */
-.mdx-content table {
-  @apply w-full my-6 border-collapse;
-}
-
-.mdx-content th,
-.mdx-content td {
-  @apply border border-gray-800 px-4 py-2;
-}
-
-.mdx-content th {
-  @apply bg-gray-900/50 text-blue-200 font-semibold;
-}
-
-.mdx-content tr:nth-child(even) {
-  @apply bg-gray-900/30;
-}
-
-/* Images */
-.mdx-content img {
-  @apply rounded-lg shadow-lg my-6;
-}
-
-/* Strong and emphasis */
-.mdx-content strong {
-  @apply text-blue-200 font-semibold;
-}
-
-.mdx-content em {
-  @apply text-blue-100 italic;
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
 }

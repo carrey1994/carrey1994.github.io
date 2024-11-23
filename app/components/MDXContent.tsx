@@ -9,11 +9,17 @@ import Link from 'next/link'
 import '../styles/mdx.css'
 
 const options = {
-  theme: 'dracula',
+  theme: 'dark-plus',
   keepBackground: true,
-  defaultLang: 'plaintext',
+  defaultLang: 'typescript',
   keepIndent: true,
-  // Remove onVisitLine as it might interfere with indentation
+  showLineNumbers: true,
+  grid: true,
+  onVisitLine(node: any) {
+    if (node.children.length === 0) {
+      node.children = [{ type: 'text', value: ' ' }]
+    }
+  },
   onVisitHighlightedLine(node: any) {
     node.properties.className = ['highlighted']
   },
@@ -38,7 +44,6 @@ export default function MDXContent({ content }: MDXContentProps) {
           return;
         }
         
-        // Normalize line endings but preserve indentation
         const normalizedContent = content.replace(/\r\n?/g, '\n');
         
         const mdx = await serialize(normalizedContent, {
@@ -60,12 +65,11 @@ export default function MDXContent({ content }: MDXContentProps) {
 
   const handleCopy = async (code: string) => {
     try {
-      // Clean the code before copying but preserve indentation
       const cleanCode = code
         .split('\n')
-        .map(line => line.replace(/^\d+(?:\s{2}|\t)/, '')) // Remove line numbers while keeping indentation
+        .map(line => line.replace(/^\d+\s{2}/, ''))
         .join('\n')
-        .trimEnd(); // Only trim end to preserve leading whitespace
+        .trim();
       await navigator.clipboard.writeText(cleanCode)
       setCopiedCode(code)
       setTimeout(() => setCopiedCode(null), 2000)
@@ -86,33 +90,39 @@ export default function MDXContent({ content }: MDXContentProps) {
         ?.props?.className?.replace('language-', '') || ''
 
       return (
-        <pre {...props} data-language={language}>
-          <div className="code-header">
-            {language && <span className="language-tag">{language}</span>}
-            <button
-              onClick={() => handleCopy(code)}
-              className="copy-button group"
-              aria-label={copiedCode === code ? 'Copied!' : 'Copy code'}
-              title={copiedCode === code ? 'Copied!' : 'Copy code'}
-            >
-              {copiedCode === code ? (
-                <Check className="w-4 h-4 transition-transform group-hover:scale-110" />
-              ) : (
-                <Copy className="w-4 h-4 transition-transform group-hover:scale-110" />
-              )}
-            </button>
-          </div>
-          <code className="code-content">
-            {children}
-          </code>
-        </pre>
+        <div className="relative group">
+          <pre {...props} data-language={language}>
+            <div className="absolute right-2 top-2">
+              <button
+                onClick={() => handleCopy(code)}
+                className="copy-button"
+                aria-label={copiedCode === code ? 'Copied!' : 'Copy code'}
+                title={copiedCode === code ? 'Copied!' : 'Copy code'}
+              >
+                {copiedCode === code ? (
+                  <Check className="w-4 h-4 transition-transform group-hover:scale-110" />
+                ) : (
+                  <Copy className="w-4 h-4 transition-transform group-hover:scale-110" />
+                )}
+              </button>
+            </div>
+            <code className="code-content">
+              {children}
+            </code>
+          </pre>
+        </div>
       )
     },
-    code: ({ children, className, ...props }: any) => (
-      <code className={className} {...props}>
-        {children}
-      </code>
-    ),
+    code: ({ children, className, ...props }: any) => {
+      if (!className) {
+        return <code className="inline-code">{children}</code>
+      }
+      return (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      )
+    },
     a: ({ href, children }: any) => {
       const isInternal = href?.startsWith('/')
       if (isInternal) {
