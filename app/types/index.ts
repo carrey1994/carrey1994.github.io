@@ -1,11 +1,10 @@
 export interface Tag {
+  id: number;
   name: string;
-  articleCount: number;
-  lastActive: Date | null;
 }
 
 export interface Article {
-  id: string;
+  id: number;
   title: string;
   excerpt: string | null;
   content: string;
@@ -21,7 +20,7 @@ export interface ArticleListResponse {
   total: number;
   page: number;
   limit: number;
-  totalPages?: number;  // Add this to match API response
+  totalPages?: number; // Add this to match API response
 }
 
 export interface Profile {

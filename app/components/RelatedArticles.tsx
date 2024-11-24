@@ -32,7 +32,7 @@ export default function RelatedArticles({ currentArticle, articles }: RelatedArt
         {relatedArticles.map((article) => (
           <Link 
             key={article.id} 
-            href={`/articles/${article.slug}`}
+            href={`/articles/id/${article.id}`}
             className="glass-effect rounded-xl p-6 group relative overflow-hidden hover:-translate-y-1 transition-all duration-300"
             onClick={handleClick}
           >

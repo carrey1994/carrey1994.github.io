@@ -1,4 +1,4 @@
-import type { Article, Profile } from '../types'
+import type { Article, Profile } from '../types';
 
 // Helper function to generate dates
 const generateDate = (daysAgo: number) => {
@@ -8,23 +8,25 @@ const generateDate = (daysAgo: number) => {
 };
 
 export const MOCK_PROFILE: Profile = {
-  name: "James Wu",
-  bio: "Software engineer passionate about web development and data science. I write about programming, algorithms, and web technologies.",
-  avatar: "/tower.jpeg",
+  name: 'James Wu',
+  bio: 'Software engineer passionate about web development and data science. I write about programming, algorithms, and web technologies.',
+  avatar: '/tower.jpeg',
   socialLinks: {
-    github: "https://github.com/carrey1994",
-    twitter: "https://twitter.com",
-    linkedin: "https://linkedin.com",
-    email: "james.wu@example.com"
-  }
-}
+    github: 'https://github.com/carrey1994',
+    twitter: 'https://twitter.com',
+    linkedin: 'https://linkedin.com',
+    email: 'james.wu@example.com',
+  },
+};
 
 // Add 4 new algorithm articles to baseArticles
 const algorithmArticles: Article[] = [
   {
-    id: '51',
+    id: 51,
+    published: true,
     title: 'Dynamic Programming Fundamentals',
-    excerpt: 'Master dynamic programming with step-by-step examples and practical problem-solving techniques.',
+    excerpt:
+      'Master dynamic programming with step-by-step examples and practical problem-solving techniques.',
     content: `Dynamic Programming (DP) is a powerful algorithmic technique that solves complex problems by breaking them down into simpler subproblems.
 
 ## Understanding Dynamic Programming
@@ -57,12 +59,15 @@ console.log(fibonacci(10)); // Output: 55
 - Identify the subproblem pattern
 - Define clear state transitions
 - Choose between top-down and bottom-up approaches`,
-    tags: [{ id: '60', name: 'algorithms' }, { id: '61', name: 'dynamic-programming' }],
+    tags: [
+      { id: 60, name: 'algorithms' },
+      { id: 61, name: 'dynamic-programming' },
+    ],
     createdAt: generateDate(1),
-    slug: 'dynamic-programming-fundamentals'
   },
   {
-    id: '52',
+    id: 52,
+    published: true,
     title: 'Graph Algorithms in Practice',
     excerpt: 'Comprehensive guide to implementing and understanding essential graph algorithms.',
     content: `Graph algorithms are fundamental to solving many real-world problems, from social networks to route planning.
@@ -112,14 +117,18 @@ class Graph {
 - Route Planning
 - Network Flow
 - Dependency Resolution`,
-    tags: [{ id: '60', name: 'algorithms' }, { id: '62', name: 'graph-algorithms' }],
+    tags: [
+      { id: 60, name: 'algorithms' },
+      { id: 62, name: 'graph-algorithms' },
+    ],
     createdAt: generateDate(2),
-    slug: 'graph-algorithms-in-practice'
   },
   {
-    id: '53',
+    id: 53,
+    published: true,
     title: 'Sorting Algorithms Deep Dive',
-    excerpt: 'Detailed analysis and implementation of various sorting algorithms with performance comparisons.',
+    excerpt:
+      'Detailed analysis and implementation of various sorting algorithms with performance comparisons.',
     content: `
       Understanding sorting algorithms is crucial for every programmer. Let's explore different approaches and their trade-offs.
 
@@ -161,14 +170,18 @@ class Graph {
       - Bubble Sort: O(n²)
       - Selection Sort: O(n²)
     `,
-    tags: [{ id: '60', name: 'algorithms' }, { id: '63', name: 'sorting-algorithms' }],
+    tags: [
+      { id: 60, name: 'algorithms' },
+      { id: 63, name: 'sorting-algorithms' },
+    ],
     createdAt: generateDate(3),
-    slug: 'sorting-algorithms-deep-dive'
   },
   {
-    id: '54',
+    id: 54,
+    published: true,
     title: 'Binary Search and Its Variations',
-    excerpt: 'Advanced techniques and variations of binary search algorithm with real-world applications.',
+    excerpt:
+      'Advanced techniques and variations of binary search algorithm with real-world applications.',
     content: `
       Binary search is more than just finding elements in a sorted array. Let's explore its variations and applications.
 
@@ -221,10 +234,12 @@ class Graph {
       - Optimization problems
       - Rate limiting algorithms
     `,
-    tags: [{ id: '60', name: 'algorithms' }, { id: '64', name: 'binary-search' }],
+    tags: [
+      { id: 60, name: 'algorithms' },
+      { id: 64, name: 'binary-search' },
+    ],
     createdAt: generateDate(4),
-    slug: 'binary-search-and-variations'
-  }
+  },
 ];
 
 // Additional articles for pagination
@@ -240,7 +255,7 @@ const additionalArticles: Article[] = Array.from({ length: 25 }, (_, index) => {
     { title: 'Vue.js Component Design', tag: 'vue' },
     { title: 'MongoDB Aggregation', tag: 'mongodb' },
     { title: 'AWS Lambda Functions', tag: 'aws' },
-    { title: 'Kubernetes Basics', tag: 'kubernetes' }
+    { title: 'Kubernetes Basics', tag: 'kubernetes' },
   ];
 
   const topicIndex = index % topics.length;
@@ -249,6 +264,7 @@ const additionalArticles: Article[] = Array.from({ length: 25 }, (_, index) => {
   return {
     id,
     title: `${topics[topicIndex].title} - Part ${partNumber}`,
+    published: true,
     excerpt: `Learn about ${topics[topicIndex].title.toLowerCase()} and best practices. Part ${partNumber} of our comprehensive guide.`,
     content: `This is a detailed article about ${topics[topicIndex].title}.
 
@@ -273,20 +289,24 @@ function example() {
 ## Conclusion
 Keep learning and practicing these concepts.`,
     tags: [
-      { id: `${10 + topicIndex + 1}`, name: topics[topicIndex].tag },
-      { id: `${20 + index % 5}`, name: ['frontend', 'backend', 'devops', 'database', 'cloud'][index % 5] }
+      { id: 10 + topicIndex + 1, name: topics[topicIndex].tag },
+      {
+        id: 20 + (index % 5),
+        name: ['frontend', 'backend', 'devops', 'database', 'cloud'][index % 5],
+      },
     ],
     createdAt: generateDate(10 + index * 2),
-    slug: `${topics[topicIndex].title.toLowerCase().replace(/\s+/g, '-')}-part-${partNumber}`
   };
 });
 
 // First 5 articles with detailed content
 const baseArticles: Article[] = [
   {
-    id: '1',
+    id: 1,
     title: 'Understanding Data Structures',
-    excerpt: 'An introduction to fundamental data structures in programming and their practical applications in solving real-world problems.',
+    published: true,
+    excerpt:
+      'An introduction to fundamental data structures in programming and their practical applications in solving real-world problems.',
     content: `Data structures are fundamental building blocks in computer programming that help us organize and manage data efficiently. In this comprehensive guide, we'll explore various data structures and their practical applications.
 
 ## Arrays and Lists
@@ -380,12 +400,15 @@ class BinarySearchTree {
       - Type of operations (insertions, deletions, searches)
       - Nature of the data being stored
     `,
-    tags: [{ id: '1', name: 'data structures' }, { id: '2', name: 'algorithms' }],
+    tags: [
+      { id: 1, name: 'data structures' },
+      { id: 2, name: 'algorithms' },
+    ],
     createdAt: generateDate(0),
-    slug: 'understanding-data-structures'
   },
   {
-    id: '2',
+    id: 2,
+    published: true,
     title: 'Getting Started with Next.js',
     excerpt: 'Learn how to build modern web applications with Next.js, React, and TypeScript.',
     content: `
@@ -505,12 +528,15 @@ class BinarySearchTree {
       ## Conclusion
       Next.js provides an excellent foundation for building modern web applications. Its features and developer experience make it a top choice for both small and large projects. Start with the basics and gradually explore more advanced features as your needs grow.
     `,
-    tags: [{ id: '3', name: 'nextjs' }, { id: '4', name: 'react' }],
+    tags: [
+      { id: 3, name: 'nextjs' },
+      { id: 4, name: 'react' },
+    ],
     createdAt: generateDate(2),
-    slug: 'getting-started-with-nextjs'
   },
   {
-    id: '3',
+    id: 3,
+    published: true,
     title: 'Machine Learning Basics',
     excerpt: 'An overview of machine learning concepts and how to implement basic algorithms.',
     content: `
@@ -594,12 +620,15 @@ class BinarySearchTree {
       ## Conclusion
       Machine learning is a powerful tool when used correctly. Start with simple models and gradually move to more complex ones as you gain experience.
     `,
-    tags: [{ id: '5', name: 'machine-learning' }, { id: '6', name: 'python' }],
+    tags: [
+      { id: 5, name: 'machine-learning' },
+      { id: 6, name: 'python' },
+    ],
     createdAt: generateDate(4),
-    slug: 'machine-learning-basics'
   },
   {
-    id: '4',
+    id: 4,
+    published: true,
     title: 'Clean Code Principles',
     excerpt: 'Best practices for writing maintainable and scalable code.',
     content: `
@@ -745,12 +774,15 @@ class BinarySearchTree {
       }
       \`\`\`
     `,
-    tags: [{ id: '7', name: 'clean-code' }, { id: '8', name: 'best-practices' }],
+    tags: [
+      { id: 7, name: 'clean-code' },
+      { id: 8, name: 'best-practices' },
+    ],
     createdAt: generateDate(6),
-    slug: 'clean-code-principles'
   },
   {
-    id: '5',
+    id: 5,
+    published: true,
     title: 'Web Performance Optimization',
     excerpt: 'Techniques and strategies to improve your website performance.',
     content: `
@@ -874,10 +906,12 @@ class BinarySearchTree {
     ## Conclusion
     Performance optimization is an ongoing process. Regularly monitor your application's performance and make incremental improvements based on real user metrics.
   `,
-    tags: [{ id: '9', name: 'performance' }, { id: '10', name: 'web-optimization' }],
+    tags: [
+      { id: 9, name: 'performance' },
+      { id: 10, name: 'web-optimization' },
+    ],
     createdAt: generateDate(8),
-    slug: 'web-performance-optimization'
-  }
+  },
 ];
 
 // Additional articles 31-50
@@ -893,7 +927,7 @@ const moreArticles: Article[] = Array.from({ length: 20 }, (_, index) => {
     { title: 'Elasticsearch Tips', tag: 'elasticsearch' },
     { title: 'CI/CD Pipeline', tag: 'cicd' },
     { title: 'System Design', tag: 'system-design' },
-    { title: 'Security Best Practices', tag: 'security' }
+    { title: 'Security Best Practices', tag: 'security' },
   ];
 
   const topicIndex = index % topics.length;
@@ -901,6 +935,7 @@ const moreArticles: Article[] = Array.from({ length: 20 }, (_, index) => {
 
   return {
     id,
+    published: true,
     title: `${topics[topicIndex].title} - Part ${partNumber}`,
     excerpt: `Exploring ${topics[topicIndex].title.toLowerCase()} concepts and implementation details. Part ${partNumber}.`,
     content: `Quick guide about ${topics[topicIndex].title}.
@@ -924,13 +959,20 @@ function demo() {
 ## Summary
 Quick recap of ${topics[topicIndex].title} concepts.`,
     tags: [
-      { id: `${30 + topicIndex + 1}`, name: topics[topicIndex].tag },
-      { id: `${40 + index % 5}`, name: ['architecture', 'tools', 'languages', 'frameworks', 'infrastructure'][index % 5] }
+      { id: 30 + topicIndex + 1, name: topics[topicIndex].tag },
+      {
+        id: 40 + (index % 5),
+        name: ['architecture', 'tools', 'languages', 'frameworks', 'infrastructure'][index % 5],
+      },
     ],
     createdAt: generateDate(60 + index * 2), // Older dates for these articles
-    slug: `${topics[topicIndex].title.toLowerCase().replace(/\s+/g, '-')}-part-${partNumber}`
   };
 });
 
 // Combine all articles (update the export)
-export const MOCK_ARTICLES: Article[] = [...baseArticles, ...algorithmArticles, ...additionalArticles, ...moreArticles];
+export const MOCK_ARTICLES: Article[] = [
+  ...baseArticles,
+  ...algorithmArticles,
+  ...additionalArticles,
+  ...moreArticles,
+];
