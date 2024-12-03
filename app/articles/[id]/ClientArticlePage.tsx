@@ -16,7 +16,7 @@ interface ClientArticlePageProps {
 }
 
 
-export default function ClientArticlePage({ article, formattedContent, relatedArticles }: ClientArticlePageProps) {
+export default function ClientArticlePage({ article, relatedArticles }: ClientArticlePageProps) {
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {

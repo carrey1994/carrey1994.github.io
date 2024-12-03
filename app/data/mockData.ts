@@ -1,4 +1,4 @@
-import type { Article, Profile } from '../types';
+import { AccessLevel, type Article, type Profile } from '../types';
 
 // Helper function to generate dates
 const generateDate = (daysAgo: number) => {
@@ -24,6 +24,7 @@ const algorithmArticles: Article[] = [
   {
     id: 51,
     published: true,
+    accessLevel: AccessLevel.PREMIUM,
     title: 'Dynamic Programming Fundamentals',
     excerpt:
       'Master dynamic programming with step-by-step examples and practical problem-solving techniques.',
@@ -67,6 +68,7 @@ console.log(fibonacci(10)); // Output: 55
   },
   {
     id: 52,
+    accessLevel: AccessLevel.PREMIUM,
     published: true,
     title: 'Graph Algorithms in Practice',
     excerpt: 'Comprehensive guide to implementing and understanding essential graph algorithms.',
@@ -125,6 +127,7 @@ class Graph {
   },
   {
     id: 53,
+    accessLevel: AccessLevel.PREMIUM,
     published: true,
     title: 'Sorting Algorithms Deep Dive',
     excerpt:
@@ -178,6 +181,7 @@ class Graph {
   },
   {
     id: 54,
+    accessLevel: AccessLevel.PREMIUM,
     published: true,
     title: 'Binary Search and Its Variations',
     excerpt:
@@ -244,7 +248,7 @@ class Graph {
 
 // Additional articles for pagination
 const additionalArticles: Article[] = Array.from({ length: 25 }, (_, index) => {
-  const id = (index + 6).toString();
+  const id = (index + 6);
   const topics = [
     { title: 'TypeScript Advanced Types', tag: 'typescript' },
     { title: 'React State Management', tag: 'react' },
@@ -263,6 +267,7 @@ const additionalArticles: Article[] = Array.from({ length: 25 }, (_, index) => {
 
   return {
     id,
+    accessLevel: AccessLevel.PREMIUM,
     title: `${topics[topicIndex].title} - Part ${partNumber}`,
     published: true,
     excerpt: `Learn about ${topics[topicIndex].title.toLowerCase()} and best practices. Part ${partNumber} of our comprehensive guide.`,
@@ -303,6 +308,7 @@ Keep learning and practicing these concepts.`,
 const baseArticles: Article[] = [
   {
     id: 1,
+    accessLevel: AccessLevel.PREMIUM,
     title: 'Understanding Data Structures',
     published: true,
     excerpt:
@@ -408,6 +414,7 @@ class BinarySearchTree {
   },
   {
     id: 2,
+    accessLevel: AccessLevel.PREMIUM,
     published: true,
     title: 'Getting Started with Next.js',
     excerpt: 'Learn how to build modern web applications with Next.js, React, and TypeScript.',
@@ -536,6 +543,7 @@ class BinarySearchTree {
   },
   {
     id: 3,
+    accessLevel: AccessLevel.PREMIUM,
     published: true,
     title: 'Machine Learning Basics',
     excerpt: 'An overview of machine learning concepts and how to implement basic algorithms.',
@@ -628,6 +636,7 @@ class BinarySearchTree {
   },
   {
     id: 4,
+    accessLevel: AccessLevel.PREMIUM,
     published: true,
     title: 'Clean Code Principles',
     excerpt: 'Best practices for writing maintainable and scalable code.',
@@ -782,6 +791,7 @@ class BinarySearchTree {
   },
   {
     id: 5,
+    accessLevel: AccessLevel.PREMIUM,
     published: true,
     title: 'Web Performance Optimization',
     excerpt: 'Techniques and strategies to improve your website performance.',
@@ -916,7 +926,7 @@ class BinarySearchTree {
 
 // Additional articles 31-50
 const moreArticles: Article[] = Array.from({ length: 20 }, (_, index) => {
-  const id = (index + 31).toString();
+  const id = (index + 31);
   const topics = [
     { title: 'Rust for JavaScript Developers', tag: 'rust' },
     { title: 'WebAssembly Basics', tag: 'wasm' },
@@ -935,6 +945,7 @@ const moreArticles: Article[] = Array.from({ length: 20 }, (_, index) => {
 
   return {
     id,
+    accessLevel: AccessLevel.PREMIUM,
     published: true,
     title: `${topics[topicIndex].title} - Part ${partNumber}`,
     excerpt: `Exploring ${topics[topicIndex].title.toLowerCase()} concepts and implementation details. Part ${partNumber}.`,

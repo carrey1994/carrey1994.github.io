@@ -3,12 +3,19 @@ export interface Tag {
   name: string;
 }
 
+export enum AccessLevel {
+  Guest = "GUEST",
+  MEMBER = "MEMBER",
+  PREMIUM = "PREMIUM"
+}
+
 export interface Article {
   id: number;
   title: string;
   excerpt: string | null;
   content: string;
   tags: Tag[];
+  accessLevel: AccessLevel;
   createdAt: Date;
   published: boolean;
   coverImage?: string | null;

@@ -1,4 +1,4 @@
-'use client'
+import { throttle } from 'lodash'
 
 import { useEffect, useState } from 'react'
 
@@ -6,27 +6,18 @@ export default function ScrollProgress() {
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
-    let rafId: number
-    
-    const updateProgress = () => {
-      // Calculate how far the user has scrolled
+    const updateProgress = throttle(() => {
       const scrollPx = document.documentElement.scrollTop
       const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight
-      const scrolled = scrollPx / winHeightPx * 100
-      
+      const scrolled = (scrollPx / winHeightPx) * 100
       setProgress(scrolled)
-      // Request next frame
-      rafId = requestAnimationFrame(updateProgress)
-    }
+    }, 10) // Update every 50ms (you can adjust this)
 
-    // Start the animation frame loop
-    rafId = requestAnimationFrame(updateProgress)
-    
+    window.addEventListener('scroll', updateProgress)
+
     // Cleanup
     return () => {
-      if (rafId) {
-        cancelAnimationFrame(rafId)
-      }
+      window.removeEventListener('scroll', updateProgress)
     }
   }, [])
 

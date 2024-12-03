@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import type { Article } from '../types'
+import { Article } from '../types'
 import MouseFollowGradient from './MouseFollowGradient'
 
 export default function ArticleCard({ article }: { article: Article }) {
