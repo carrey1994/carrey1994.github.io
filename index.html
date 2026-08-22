@@ -2,24 +2,20 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
+
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1.0"
+    content="width=device-width, initial-scale=1"
   />
 
-  <title>CloudFront iframe 測試</title>
+  <title>iframe Token 測試</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
       padding: 24px;
       font-family: system-ui, sans-serif;
       background: #f1f5f9;
-      color: #0f172a;
     }
 
     .container {
@@ -27,46 +23,103 @@
       margin: auto;
     }
 
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 12px;
+      resize: vertical;
+    }
+
+    button {
+      margin: 12px 0;
+      padding: 12px 20px;
+      cursor: pointer;
+    }
+
     iframe {
       width: 100%;
-      height: 700px;
+      height: 650px;
       border: 1px solid #cbd5e1;
       border-radius: 12px;
       background: white;
     }
 
-    .status {
-      margin-bottom: 16px;
-      padding: 12px;
-      background: white;
-      border-radius: 8px;
+    #status {
+      margin: 12px 0;
     }
   </style>
 </head>
 
 <body>
   <main class="container">
-    <h1>CloudFront iframe 測試</h1>
+    <h1>iframe Token 測試</h1>
 
-    <div class="status" id="status">
-      iframe 載入中……
-    </div>
+    <label for="token">Access Token</label>
+
+    <textarea
+      id="token"
+      placeholder="將測試 Token 貼在這裡"
+    ></textarea>
+
+    <button id="send-token">
+      將 Token 傳給 iframe
+    </button>
+
+    <p id="status">等待 iframe…</p>
 
     <iframe
-      id="test-frame"
+      id="app-frame"
       src="https://d1iheob5a1an0y.cloudfront.net"
-      title="CloudFront React Application"
-      allow="clipboard-read; clipboard-write"
+      title="CloudFront Application"
     ></iframe>
   </main>
 
   <script>
-    const frame = document.getElementById("test-frame");
+    const cloudFrontOrigin =
+      "https://d1iheob5a1an0y.cloudfront.net";
+
+    const frame = document.getElementById("app-frame");
+    const tokenInput = document.getElementById("token");
+    const sendButton = document.getElementById("send-token");
     const status = document.getElementById("status");
 
-    frame.addEventListener("load", () => {
-      status.textContent = "iframe load 事件已觸發";
-      status.style.color = "#15803d";
+    function sendToken() {
+      const token = tokenInput.value.trim();
+
+      if (!token) {
+        status.textContent = "請先輸入 Token";
+        return;
+      }
+
+      frame.contentWindow.postMessage(
+        {
+          type: "SET_ACCESS_TOKEN",
+          accessToken: token,
+        },
+        cloudFrontOrigin,
+      );
+
+      status.textContent = "Token 已傳送給 iframe";
+    }
+
+    sendButton.addEventListener("click", sendToken);
+
+    window.addEventListener("message", (event) => {
+      if (event.origin !== cloudFrontOrigin) {
+        return;
+      }
+
+      if (event.source !== frame.contentWindow) {
+        return;
+      }
+
+      if (event.data?.type === "IFRAME_READY") {
+        status.textContent = "iframe 已準備好，可以傳送 Token";
+      }
+
+      if (event.data?.type === "TOKEN_RECEIVED") {
+        status.textContent = "iframe 已收到 Token";
+      }
     });
   </script>
 </body>
